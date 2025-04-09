@@ -1,0 +1,1696 @@
+openapi: 3.0.3
+info:
+  title: Freevigilance API
+  version: 1.0.0
+  description: PVA Management Application for Pharmaceutical Companies.
+paths:
+  /api/medicinal-products/:
+    get:
+      operationId: medicinal_products_list
+      tags:
+      - medicinal-products
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/MedicinalProduct'
+          description: ''
+    post:
+      operationId: medicinal_products_create
+      tags:
+      - medicinal-products
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MedicinalProduct'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/MedicinalProduct'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/MedicinalProduct'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MedicinalProduct'
+          description: ''
+  /api/medicinal-products/{id}/:
+    get:
+      operationId: medicinal_products_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this medicinal product.
+        required: true
+      tags:
+      - medicinal-products
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MedicinalProduct'
+          description: ''
+    put:
+      operationId: medicinal_products_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this medicinal product.
+        required: true
+      tags:
+      - medicinal-products
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MedicinalProduct'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/MedicinalProduct'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/MedicinalProduct'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MedicinalProduct'
+          description: ''
+    patch:
+      operationId: medicinal_products_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this medicinal product.
+        required: true
+      tags:
+      - medicinal-products
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedMedicinalProduct'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedMedicinalProduct'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedMedicinalProduct'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MedicinalProduct'
+          description: ''
+    delete:
+      operationId: medicinal_products_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this medicinal product.
+        required: true
+      tags:
+      - medicinal-products
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/obligations/:
+    get:
+      operationId: obligations_list
+      tags:
+      - obligations
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Obligation'
+          description: ''
+    post:
+      operationId: obligations_create
+      tags:
+      - obligations
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Obligation'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Obligation'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Obligation'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Obligation'
+          description: ''
+  /api/obligations/{id}/tasks/:
+    get:
+      operationId: obligations_tasks_list
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - obligations
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Task'
+          description: ''
+  /api/obligations/{id}/:
+    get:
+      operationId: obligations_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this obligation.
+        required: true
+      tags:
+      - obligations
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Obligation'
+          description: ''
+    put:
+      operationId: obligations_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this obligation.
+        required: true
+      tags:
+      - obligations
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Obligation'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Obligation'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Obligation'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Obligation'
+          description: ''
+    patch:
+      operationId: obligations_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this obligation.
+        required: true
+      tags:
+      - obligations
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedObligation'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedObligation'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedObligation'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Obligation'
+          description: ''
+    delete:
+      operationId: obligations_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this obligation.
+        required: true
+      tags:
+      - obligations
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/partners/:
+    get:
+      operationId: partners_list
+      tags:
+      - partners
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Partner'
+          description: ''
+    post:
+      operationId: partners_create
+      tags:
+      - partners
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Partner'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Partner'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Partner'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Partner'
+          description: ''
+  /api/partners/{id}/:
+    get:
+      operationId: partners_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this partner.
+        required: true
+      tags:
+      - partners
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Partner'
+          description: ''
+    put:
+      operationId: partners_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this partner.
+        required: true
+      tags:
+      - partners
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Partner'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Partner'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Partner'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Partner'
+          description: ''
+    patch:
+      operationId: partners_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this partner.
+        required: true
+      tags:
+      - partners
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedPartner'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedPartner'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedPartner'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Partner'
+          description: ''
+    delete:
+      operationId: partners_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this partner.
+        required: true
+      tags:
+      - partners
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/pvas/:
+    get:
+      operationId: pvas_list
+      tags:
+      - pvas
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PVA'
+          description: ''
+    post:
+      operationId: pvas_create
+      tags:
+      - pvas
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PVA'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PVA'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PVA'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PVA'
+          description: ''
+  /api/pvas/{id}/obligations/:
+    get:
+      operationId: pvas_obligations_list
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - pvas
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Obligation'
+          description: ''
+  /api/pvas/{id}/:
+    get:
+      operationId: pvas_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this pva.
+        required: true
+      tags:
+      - pvas
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PVA'
+          description: ''
+    put:
+      operationId: pvas_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this pva.
+        required: true
+      tags:
+      - pvas
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PVA'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PVA'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PVA'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PVA'
+          description: ''
+    patch:
+      operationId: pvas_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this pva.
+        required: true
+      tags:
+      - pvas
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedPVA'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedPVA'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedPVA'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PVA'
+          description: ''
+    delete:
+      operationId: pvas_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this pva.
+        required: true
+      tags:
+      - pvas
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/responsibility-types/:
+    get:
+      operationId: responsibility_types_list
+      tags:
+      - responsibility-types
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ResponsibilityType'
+          description: ''
+    post:
+      operationId: responsibility_types_create
+      tags:
+      - responsibility-types
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ResponsibilityType'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ResponsibilityType'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ResponsibilityType'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponsibilityType'
+          description: ''
+  /api/responsibility-types/{id}/:
+    get:
+      operationId: responsibility_types_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this responsibility type.
+        required: true
+      tags:
+      - responsibility-types
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponsibilityType'
+          description: ''
+    put:
+      operationId: responsibility_types_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this responsibility type.
+        required: true
+      tags:
+      - responsibility-types
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ResponsibilityType'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ResponsibilityType'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ResponsibilityType'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponsibilityType'
+          description: ''
+    patch:
+      operationId: responsibility_types_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this responsibility type.
+        required: true
+      tags:
+      - responsibility-types
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedResponsibilityType'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedResponsibilityType'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedResponsibilityType'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponsibilityType'
+          description: ''
+    delete:
+      operationId: responsibility_types_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this responsibility type.
+        required: true
+      tags:
+      - responsibility-types
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/tasks/:
+    get:
+      operationId: tasks_list
+      tags:
+      - tasks
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Task'
+          description: ''
+    post:
+      operationId: tasks_create
+      tags:
+      - tasks
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Task'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Task'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Task'
+        required: true
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Task'
+          description: ''
+  /api/tasks/{id}/comments/:
+    get:
+      operationId: tasks_comments_list
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - tasks
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Comment'
+          description: ''
+    post:
+      operationId: tasks_comments_create
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - tasks
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Comment'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Comment'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Comment'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Comment'
+          description: ''
+  /api/tasks/{id}/:
+    get:
+      operationId: tasks_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this task.
+        required: true
+      tags:
+      - tasks
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Task'
+          description: ''
+    put:
+      operationId: tasks_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this task.
+        required: true
+      tags:
+      - tasks
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Task'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Task'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Task'
+        required: true
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Task'
+          description: ''
+    patch:
+      operationId: tasks_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this task.
+        required: true
+      tags:
+      - tasks
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedTask'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedTask'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedTask'
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Task'
+          description: ''
+    delete:
+      operationId: tasks_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this task.
+        required: true
+      tags:
+      - tasks
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '204':
+          description: No response body
+  /api/tasks/{id}/changelog/:
+    get:
+      operationId: tasks_changelog_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this task.
+        required: true
+      tags:
+      - tasks
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Task'
+          description: ''
+  /api/tasks/assigned/:
+    get:
+      operationId: tasks_assigned_list
+      tags:
+      - tasks
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Task'
+          description: ''
+  /api/token/:
+    post:
+      operationId: token_create
+      description: |-
+        Takes a set of user credentials and returns an access and refresh JSON web
+        token pair to prove the authentication of those credentials.
+      tags:
+      - token
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TokenObtainPair'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TokenObtainPair'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TokenObtainPair'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenObtainPair'
+          description: ''
+  /api/token/refresh/:
+    post:
+      operationId: token_refresh_create
+      description: |-
+        Takes a refresh type JSON web token and returns an access type JSON web
+        token if the refresh token is valid.
+      tags:
+      - token
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TokenRefresh'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TokenRefresh'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TokenRefresh'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenRefresh'
+          description: ''
+  /api/users/:
+    get:
+      operationId: users_list
+      tags:
+      - users
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+          description: ''
+    post:
+      operationId: users_create
+      tags:
+      - users
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/User'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/User'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: ''
+  /api/users/{id}/:
+    get:
+      operationId: users_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this пользователь.
+        required: true
+      tags:
+      - users
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: ''
+    put:
+      operationId: users_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this пользователь.
+        required: true
+      tags:
+      - users
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/User'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/User'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: ''
+    patch:
+      operationId: users_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this пользователь.
+        required: true
+      tags:
+      - users
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedUser'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedUser'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedUser'
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: ''
+    delete:
+      operationId: users_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this пользователь.
+        required: true
+      tags:
+      - users
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
+components:
+  schemas:
+    Comment:
+      type: object
+      properties:
+        url:
+          type: string
+          format: uri
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        text:
+          type: string
+        created_by:
+          type: string
+          format: uri
+        task:
+          type: string
+          format: uri
+      required:
+      - created_at
+      - created_by
+      - task
+      - text
+      - url
+    MedicinalProduct:
+      type: object
+      properties:
+        url:
+          type: string
+          format: uri
+          readOnly: true
+        title:
+          type: string
+          maxLength: 255
+        description:
+          type: string
+      required:
+      - description
+      - title
+      - url
+    Obligation:
+      type: object
+      properties:
+        url:
+          type: string
+          format: uri
+          readOnly: true
+        title:
+          type: string
+          maxLength: 255
+        description:
+          type: string
+        start_date:
+          type: string
+          format: date
+        end_date:
+          type: string
+          format: date
+        pva:
+          type: string
+          format: uri
+        responsibility_type:
+          type: string
+          format: uri
+          nullable: true
+      required:
+      - description
+      - end_date
+      - pva
+      - start_date
+      - title
+      - url
+    PVA:
+      type: object
+      properties:
+        url:
+          type: string
+          format: uri
+          readOnly: true
+        requisites:
+          type: string
+        description:
+          type: string
+        link:
+          type: string
+          maxLength: 2048
+        status:
+          type: string
+          maxLength: 100
+        start_date:
+          type: string
+          format: date
+        end_date:
+          type: string
+          format: date
+        partner:
+          type: string
+          format: uri
+          nullable: true
+        medicinal_products:
+          type: array
+          items:
+            type: string
+            format: uri
+      required:
+      - description
+      - end_date
+      - link
+      - medicinal_products
+      - requisites
+      - start_date
+      - status
+      - url
+    Partner:
+      type: object
+      properties:
+        url:
+          type: string
+          format: uri
+          readOnly: true
+        name:
+          type: string
+          maxLength: 255
+        description:
+          type: string
+      required:
+      - description
+      - name
+      - url
+    PatchedMedicinalProduct:
+      type: object
+      properties:
+        url:
+          type: string
+          format: uri
+          readOnly: true
+        title:
+          type: string
+          maxLength: 255
+        description:
+          type: string
+    PatchedObligation:
+      type: object
+      properties:
+        url:
+          type: string
+          format: uri
+          readOnly: true
+        title:
+          type: string
+          maxLength: 255
+        description:
+          type: string
+        start_date:
+          type: string
+          format: date
+        end_date:
+          type: string
+          format: date
+        pva:
+          type: string
+          format: uri
+        responsibility_type:
+          type: string
+          format: uri
+          nullable: true
+    PatchedPVA:
+      type: object
+      properties:
+        url:
+          type: string
+          format: uri
+          readOnly: true
+        requisites:
+          type: string
+        description:
+          type: string
+        link:
+          type: string
+          maxLength: 2048
+        status:
+          type: string
+          maxLength: 100
+        start_date:
+          type: string
+          format: date
+        end_date:
+          type: string
+          format: date
+        partner:
+          type: string
+          format: uri
+          nullable: true
+        medicinal_products:
+          type: array
+          items:
+            type: string
+            format: uri
+    PatchedPartner:
+      type: object
+      properties:
+        url:
+          type: string
+          format: uri
+          readOnly: true
+        name:
+          type: string
+          maxLength: 255
+        description:
+          type: string
+    PatchedResponsibilityType:
+      type: object
+      properties:
+        url:
+          type: string
+          format: uri
+          readOnly: true
+        title:
+          type: string
+          maxLength: 255
+    PatchedTask:
+      type: object
+      properties:
+        url:
+          type: string
+          format: uri
+          readOnly: true
+        title:
+          type: string
+          maxLength: 255
+        description:
+          type: string
+        status:
+          $ref: '#/components/schemas/StatusEnum'
+        deadline:
+          type: string
+          format: date-time
+        is_recurring:
+          type: boolean
+        completion_evidence_link:
+          type: string
+          nullable: true
+          maxLength: 2048
+        created_by:
+          type: string
+          format: uri
+          readOnly: true
+        assigned_to:
+          type: string
+          format: uri
+          nullable: true
+        schedule:
+          type: string
+          format: uri
+          nullable: true
+        obligation:
+          type: string
+          format: uri
+    PatchedUser:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        password:
+          type: string
+          writeOnly: true
+          title: Пароль
+          maxLength: 128
+        last_login:
+          type: string
+          format: date-time
+          nullable: true
+          title: Последний вход
+        is_superuser:
+          type: boolean
+          title: Статус суперпользователя
+          description: Указывает, что пользователь имеет все права без явного их назначения.
+        username:
+          type: string
+          title: Имя пользователя
+          description: Обязательное поле. Не более 150 символов. Только буквы, цифры
+            и символы @/./+/-/_.
+          pattern: ^[\w.@+-]+$
+          maxLength: 150
+        first_name:
+          type: string
+          title: Имя
+          maxLength: 150
+        last_name:
+          type: string
+          title: Фамилия
+          maxLength: 150
+        email:
+          type: string
+          format: email
+          title: Адрес электронной почты
+          maxLength: 254
+        is_staff:
+          type: boolean
+          title: Статус персонала
+          description: Отметьте, если пользователь может входить в административную
+            часть сайта.
+        is_active:
+          type: boolean
+          title: Активный
+          description: Отметьте, если пользователь должен считаться активным. Уберите
+            эту отметку вместо удаления учётной записи.
+        date_joined:
+          type: string
+          format: date-time
+          title: Дата регистрации
+        groups:
+          type: array
+          items:
+            type: integer
+            title: Группы
+          title: Группы
+          description: Группы, к которым принадлежит данный пользователь. Пользователь
+            получит все права, указанные в каждой из его/её групп.
+        user_permissions:
+          type: array
+          items:
+            type: integer
+            title: Права пользователя
+          title: Права пользователя
+          description: Индивидуальные права данного пользователя.
+    ResponsibilityType:
+      type: object
+      properties:
+        url:
+          type: string
+          format: uri
+          readOnly: true
+        title:
+          type: string
+          maxLength: 255
+      required:
+      - title
+      - url
+    StatusEnum:
+      enum:
+      - Not Started
+      - In Progress
+      - Completed
+      type: string
+      description: |-
+        * `Not Started` - Не начата
+        * `In Progress` - В работе
+        * `Completed` - Завершена
+    Task:
+      type: object
+      properties:
+        url:
+          type: string
+          format: uri
+          readOnly: true
+        title:
+          type: string
+          maxLength: 255
+        description:
+          type: string
+        status:
+          $ref: '#/components/schemas/StatusEnum'
+        deadline:
+          type: string
+          format: date-time
+        is_recurring:
+          type: boolean
+        completion_evidence_link:
+          type: string
+          nullable: true
+          maxLength: 2048
+        created_by:
+          type: string
+          format: uri
+          readOnly: true
+        assigned_to:
+          type: string
+          format: uri
+          nullable: true
+        schedule:
+          type: string
+          format: uri
+          nullable: true
+        obligation:
+          type: string
+          format: uri
+      required:
+      - created_by
+      - deadline
+      - description
+      - obligation
+      - title
+      - url
+    TokenObtainPair:
+      type: object
+      properties:
+        username:
+          type: string
+          writeOnly: true
+        password:
+          type: string
+          writeOnly: true
+        access:
+          type: string
+          readOnly: true
+        refresh:
+          type: string
+          readOnly: true
+      required:
+      - access
+      - password
+      - refresh
+      - username
+    TokenRefresh:
+      type: object
+      properties:
+        access:
+          type: string
+          readOnly: true
+        refresh:
+          type: string
+          writeOnly: true
+      required:
+      - access
+      - refresh
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        password:
+          type: string
+          writeOnly: true
+          title: Пароль
+          maxLength: 128
+        last_login:
+          type: string
+          format: date-time
+          nullable: true
+          title: Последний вход
+        is_superuser:
+          type: boolean
+          title: Статус суперпользователя
+          description: Указывает, что пользователь имеет все права без явного их назначения.
+        username:
+          type: string
+          title: Имя пользователя
+          description: Обязательное поле. Не более 150 символов. Только буквы, цифры
+            и символы @/./+/-/_.
+          pattern: ^[\w.@+-]+$
+          maxLength: 150
+        first_name:
+          type: string
+          title: Имя
+          maxLength: 150
+        last_name:
+          type: string
+          title: Фамилия
+          maxLength: 150
+        email:
+          type: string
+          format: email
+          title: Адрес электронной почты
+          maxLength: 254
+        is_staff:
+          type: boolean
+          title: Статус персонала
+          description: Отметьте, если пользователь может входить в административную
+            часть сайта.
+        is_active:
+          type: boolean
+          title: Активный
+          description: Отметьте, если пользователь должен считаться активным. Уберите
+            эту отметку вместо удаления учётной записи.
+        date_joined:
+          type: string
+          format: date-time
+          title: Дата регистрации
+        groups:
+          type: array
+          items:
+            type: integer
+            title: Группы
+          title: Группы
+          description: Группы, к которым принадлежит данный пользователь. Пользователь
+            получит все права, указанные в каждой из его/её групп.
+        user_permissions:
+          type: array
+          items:
+            type: integer
+            title: Права пользователя
+          title: Права пользователя
+          description: Индивидуальные права данного пользователя.
+      required:
+      - id
+      - password
+      - username
+  securitySchemes:
+    jwtAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
