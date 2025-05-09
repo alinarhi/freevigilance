@@ -40,7 +40,4 @@ class Migration(migrations.Migration):
             name='description',
             field=models.TextField(blank=True),
         ),
-        migrations.DeleteModel(
-            name='HistoricalTask',
-        ),
     ]

@@ -11,11 +11,6 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.RenameField(
-            model_name='historicaltask',
-            old_name='comletion_evidence_link',
-            new_name='completion_evidence_link',
-        ),
-        migrations.RenameField(
             model_name='task',
             old_name='comletion_evidence_link',
             new_name='completion_evidence_link',

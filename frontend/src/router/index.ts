@@ -1,0 +1,75 @@
+import { createRouter, createWebHistory } from 'vue-router'
+import HomeView from '@/views/HomeView.vue'
+import LoginView from '@/views/LoginView.vue'
+import { useUserStore } from '@/stores/user';
+import PVAsView from '@/views/PVAsView.vue';
+import AuditlogView from '@/views/AuditlogView.vue';
+import TaskView from '@/views/TaskView.vue';
+
+const router = createRouter({
+  history: createWebHistory(import.meta.env.BASE_URL),
+  routes: [
+    {
+      path: '/',
+      redirect: '/tasks'
+    },
+    {
+      path: '/tasks',
+      name: 'tasks',
+      component: HomeView,
+      meta: {
+        requiresAuth: true
+      }
+    },{
+      path: '/tasks/:id',
+      name: 'task',
+      component: TaskView,
+      meta: {
+        requiresAuth: true
+      }
+    },{
+      path: '/pvas',
+      name: 'pvas',
+      component: PVAsView,
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
+      path: '/auditlog',
+      name: 'auditlog',
+      component: AuditlogView,
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
+      path: '/login',
+      name: 'login',
+      component: LoginView,
+    },
+    {
+      path: '/about',
+      name: 'about',
+      // route level code-splitting
+      // this generates a separate chunk (About.[hash].js) for this route
+      // which is lazy-loaded when the route is visited.
+      component: () => import('../views/AboutView.vue'),
+    },
+    {
+      path: '/logout',
+      redirect: '/login'
+    },
+  ],
+})
+
+router.beforeEach(async (to, from, next) => {
+  const store = useUserStore();
+  if (to.meta.requiresAuth && !store.isAuthenticated) {
+    next('/login');
+  } else {
+    next();
+  }
+});
+
+export default router

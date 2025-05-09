@@ -25,11 +25,6 @@ class Migration(migrations.Migration):
             new_name='created_by',
         ),
         migrations.AddField(
-            model_name='historicaltask',
-            name='comletion_evidence_link',
-            field=models.CharField(blank=True, max_length=2048, null=True),
-        ),
-        migrations.AddField(
             model_name='obligation',
             name='end_date',
             field=models.DateField(default=django.utils.timezone.now),
@@ -61,11 +56,6 @@ class Migration(migrations.Migration):
             model_name='comment',
             name='task',
             field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='comments', to='api.task'),
-        ),
-        migrations.AlterField(
-            model_name='historicaltask',
-            name='status',
-            field=models.CharField(choices=[('Not Started', 'Не начата'), ('In Progress', 'В работе'), ('Completed', 'Завершена')], default='Not Started', max_length=50),
         ),
         migrations.AlterField(
             model_name='pva',

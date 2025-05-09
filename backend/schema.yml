@@ -1,9 +1,66 @@
 openapi: 3.0.3
 info:
   title: Freevigilance API
-  version: 1.0.0
+  version: 0.1.0
   description: PVA Management Application for Pharmaceutical Companies.
 paths:
+  /api/auditlog/:
+    get:
+      operationId: auditlog_list
+      parameters:
+      - in: query
+        name: action
+        schema:
+          type: integer
+          enum:
+          - 0
+          - 1
+          - 2
+          - 3
+        description: |-
+          * `0` - create
+          * `1` - update
+          * `2` - delete
+          * `3` - access
+      - in: query
+        name: actor__last_name__icontains
+        schema:
+          type: string
+      - in: query
+        name: actor__username__iexact
+        schema:
+          type: string
+      - in: query
+        name: content_type__model__iexact
+        schema:
+          type: string
+      - in: query
+        name: object_id
+        schema:
+          type: integer
+      - in: query
+        name: timestamp__gte
+        schema:
+          type: string
+          format: date-time
+      - in: query
+        name: timestamp__lte
+        schema:
+          type: string
+          format: date-time
+      tags:
+      - auditlog
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/LogEntry'
+          description: ''
   /api/medicinal-products/:
     get:
       operationId: medicinal_products_list
@@ -53,7 +110,7 @@ paths:
         name: id
         schema:
           type: integer
-        description: A unique integer value identifying this medicinal product.
+        description: A unique integer value identifying this Лекарственный препарат.
         required: true
       tags:
       - medicinal-products
@@ -73,7 +130,7 @@ paths:
         name: id
         schema:
           type: integer
-        description: A unique integer value identifying this medicinal product.
+        description: A unique integer value identifying this Лекарственный препарат.
         required: true
       tags:
       - medicinal-products
@@ -105,7 +162,7 @@ paths:
         name: id
         schema:
           type: integer
-        description: A unique integer value identifying this medicinal product.
+        description: A unique integer value identifying this Лекарственный препарат.
         required: true
       tags:
       - medicinal-products
@@ -136,7 +193,7 @@ paths:
         name: id
         schema:
           type: integer
-        description: A unique integer value identifying this medicinal product.
+        description: A unique integer value identifying this Лекарственный препарат.
         required: true
       tags:
       - medicinal-products
@@ -148,6 +205,23 @@ paths:
   /api/obligations/:
     get:
       operationId: obligations_list
+      parameters:
+      - in: query
+        name: description__icontains
+        schema:
+          type: string
+      - in: query
+        name: pva
+        schema:
+          type: integer
+      - in: query
+        name: responsibility_type__title__iexact
+        schema:
+          type: string
+      - in: query
+        name: title__icontains
+        schema:
+          type: string
       tags:
       - obligations
       security:
@@ -196,7 +270,7 @@ paths:
           type: integer
         required: true
       tags:
-      - obligations
+      - tasks
       security:
       - jwtAuth: []
       responses:
@@ -216,7 +290,7 @@ paths:
         name: id
         schema:
           type: integer
-        description: A unique integer value identifying this obligation.
+        description: A unique integer value identifying this Обязательство.
         required: true
       tags:
       - obligations
@@ -236,7 +310,7 @@ paths:
         name: id
         schema:
           type: integer
-        description: A unique integer value identifying this obligation.
+        description: A unique integer value identifying this Обязательство.
         required: true
       tags:
       - obligations
@@ -268,7 +342,7 @@ paths:
         name: id
         schema:
           type: integer
-        description: A unique integer value identifying this obligation.
+        description: A unique integer value identifying this Обязательство.
         required: true
       tags:
       - obligations
@@ -299,7 +373,7 @@ paths:
         name: id
         schema:
           type: integer
-        description: A unique integer value identifying this obligation.
+        description: A unique integer value identifying this Обязательство.
         required: true
       tags:
       - obligations
@@ -308,150 +382,32 @@ paths:
       responses:
         '204':
           description: No response body
-  /api/partners/:
-    get:
-      operationId: partners_list
-      tags:
-      - partners
-      security:
-      - jwtAuth: []
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Partner'
-          description: ''
-    post:
-      operationId: partners_create
-      tags:
-      - partners
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Partner'
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/Partner'
-          multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/Partner'
-        required: true
-      security:
-      - jwtAuth: []
-      responses:
-        '201':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Partner'
-          description: ''
-  /api/partners/{id}/:
-    get:
-      operationId: partners_retrieve
-      parameters:
-      - in: path
-        name: id
-        schema:
-          type: integer
-        description: A unique integer value identifying this partner.
-        required: true
-      tags:
-      - partners
-      security:
-      - jwtAuth: []
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Partner'
-          description: ''
-    put:
-      operationId: partners_update
-      parameters:
-      - in: path
-        name: id
-        schema:
-          type: integer
-        description: A unique integer value identifying this partner.
-        required: true
-      tags:
-      - partners
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Partner'
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/Partner'
-          multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/Partner'
-        required: true
-      security:
-      - jwtAuth: []
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Partner'
-          description: ''
-    patch:
-      operationId: partners_partial_update
-      parameters:
-      - in: path
-        name: id
-        schema:
-          type: integer
-        description: A unique integer value identifying this partner.
-        required: true
-      tags:
-      - partners
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/PatchedPartner'
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/PatchedPartner'
-          multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/PatchedPartner'
-      security:
-      - jwtAuth: []
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Partner'
-          description: ''
-    delete:
-      operationId: partners_destroy
-      parameters:
-      - in: path
-        name: id
-        schema:
-          type: integer
-        description: A unique integer value identifying this partner.
-        required: true
-      tags:
-      - partners
-      security:
-      - jwtAuth: []
-      responses:
-        '204':
-          description: No response body
   /api/pvas/:
     get:
       operationId: pvas_list
+      parameters:
+      - in: query
+        name: medicinal_products__title__icontains
+        schema:
+          type: string
+      - in: query
+        name: requisites__icontains
+        schema:
+          type: string
+      - in: query
+        name: status
+        schema:
+          type: string
+          enum:
+          - ACTIVE
+          - COMPLETED
+          - ENDING
+          - PLANNED
+        description: |-
+          * `PLANNED` - Планируемый
+          * `ACTIVE` - Заключен
+          * `ENDING` - Завершающийся
+          * `COMPLETED` - Завершен
       tags:
       - pvas
       security:
@@ -500,7 +456,7 @@ paths:
           type: integer
         required: true
       tags:
-      - pvas
+      - obligations
       security:
       - jwtAuth: []
       responses:
@@ -520,7 +476,7 @@ paths:
         name: id
         schema:
           type: integer
-        description: A unique integer value identifying this pva.
+        description: A unique integer value identifying this Договор.
         required: true
       tags:
       - pvas
@@ -540,7 +496,7 @@ paths:
         name: id
         schema:
           type: integer
-        description: A unique integer value identifying this pva.
+        description: A unique integer value identifying this Договор.
         required: true
       tags:
       - pvas
@@ -572,7 +528,7 @@ paths:
         name: id
         schema:
           type: integer
-        description: A unique integer value identifying this pva.
+        description: A unique integer value identifying this Договор.
         required: true
       tags:
       - pvas
@@ -603,7 +559,7 @@ paths:
         name: id
         schema:
           type: integer
-        description: A unique integer value identifying this pva.
+        description: A unique integer value identifying this Договор.
         required: true
       tags:
       - pvas
@@ -661,7 +617,7 @@ paths:
         name: id
         schema:
           type: integer
-        description: A unique integer value identifying this responsibility type.
+        description: A unique integer value identifying this Тип обязательства.
         required: true
       tags:
       - responsibility-types
@@ -681,7 +637,7 @@ paths:
         name: id
         schema:
           type: integer
-        description: A unique integer value identifying this responsibility type.
+        description: A unique integer value identifying this Тип обязательства.
         required: true
       tags:
       - responsibility-types
@@ -713,7 +669,7 @@ paths:
         name: id
         schema:
           type: integer
-        description: A unique integer value identifying this responsibility type.
+        description: A unique integer value identifying this Тип обязательства.
         required: true
       tags:
       - responsibility-types
@@ -744,7 +700,7 @@ paths:
         name: id
         schema:
           type: integer
-        description: A unique integer value identifying this responsibility type.
+        description: A unique integer value identifying this Тип обязательства.
         required: true
       tags:
       - responsibility-types
@@ -756,11 +712,71 @@ paths:
   /api/tasks/:
     get:
       operationId: tasks_list
+      parameters:
+      - in: query
+        name: assigned_to
+        schema:
+          type: integer
+      - in: query
+        name: assigned_to__last_name__icontains
+        schema:
+          type: string
+      - in: query
+        name: assigned_to__username__iexact
+        schema:
+          type: string
+      - in: query
+        name: created_by__last_name__icontains
+        schema:
+          type: string
+      - in: query
+        name: created_by__username
+        schema:
+          type: string
+      - in: query
+        name: deadline__gte
+        schema:
+          type: string
+          format: date-time
+      - in: query
+        name: deadline__lte
+        schema:
+          type: string
+          format: date-time
+      - in: query
+        name: description__icontains
+        schema:
+          type: string
+      - in: query
+        name: obligation
+        schema:
+          type: integer
+      - in: query
+        name: obligation__responsibility_type__title__iexact
+        schema:
+          type: string
+      - in: query
+        name: status
+        schema:
+          type: string
+          enum:
+          - COMPLETED
+          - HIDDEN
+          - IN_PROGRESS
+          - NOT_STARTED
+        description: |-
+          * `NOT_STARTED` - Не начата
+          * `IN_PROGRESS` - В работе
+          * `COMPLETED` - Завершена
+          * `HIDDEN` - Скрыта
+      - in: query
+        name: title__icontains
+        schema:
+          type: string
       tags:
       - tasks
       security:
       - jwtAuth: []
-      - {}
       responses:
         '200':
           content:
@@ -788,13 +804,34 @@ paths:
         required: true
       security:
       - jwtAuth: []
-      - {}
       responses:
         '201':
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Task'
+          description: ''
+  /api/tasks/{id}/changelog/:
+    get:
+      operationId: tasks_changelog_list
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - tasks
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/LogEntry'
           description: ''
   /api/tasks/{id}/comments/:
     get:
@@ -857,13 +894,12 @@ paths:
         name: id
         schema:
           type: integer
-        description: A unique integer value identifying this task.
+        description: A unique integer value identifying this Задача.
         required: true
       tags:
       - tasks
       security:
       - jwtAuth: []
-      - {}
       responses:
         '200':
           content:
@@ -878,7 +914,7 @@ paths:
         name: id
         schema:
           type: integer
-        description: A unique integer value identifying this task.
+        description: A unique integer value identifying this Задача.
         required: true
       tags:
       - tasks
@@ -896,7 +932,6 @@ paths:
         required: true
       security:
       - jwtAuth: []
-      - {}
       responses:
         '200':
           content:
@@ -911,7 +946,7 @@ paths:
         name: id
         schema:
           type: integer
-        description: A unique integer value identifying this task.
+        description: A unique integer value identifying this Задача.
         required: true
       tags:
       - tasks
@@ -928,7 +963,6 @@ paths:
               $ref: '#/components/schemas/PatchedTask'
       security:
       - jwtAuth: []
-      - {}
       responses:
         '200':
           content:
@@ -943,41 +977,268 @@ paths:
         name: id
         schema:
           type: integer
-        description: A unique integer value identifying this task.
+        description: A unique integer value identifying this Задача.
         required: true
       tags:
       - tasks
       security:
       - jwtAuth: []
-      - {}
       responses:
         '204':
           description: No response body
-  /api/tasks/{id}/changelog/:
-    get:
-      operationId: tasks_changelog_retrieve
+  /api/tasks/{id}/change-status/:
+    post:
+      operationId: tasks_change_status_create
       parameters:
       - in: path
         name: id
         schema:
           type: integer
-        description: A unique integer value identifying this task.
+        description: A unique integer value identifying this Задача.
         required: true
       tags:
       - tasks
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TaskStatus'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TaskStatus'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TaskStatus'
+        required: true
       security:
       - jwtAuth: []
-      - {}
       responses:
         '200':
+          description: No response body
+        '201':
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Task'
           description: ''
-  /api/tasks/assigned/:
+  /api/tasks/completed/:
     get:
-      operationId: tasks_assigned_list
+      operationId: tasks_completed_list
+      parameters:
+      - in: query
+        name: assigned_to
+        schema:
+          type: integer
+      - in: query
+        name: assigned_to__last_name__icontains
+        schema:
+          type: string
+      - in: query
+        name: assigned_to__username__iexact
+        schema:
+          type: string
+      - in: query
+        name: created_by__last_name__icontains
+        schema:
+          type: string
+      - in: query
+        name: created_by__username
+        schema:
+          type: string
+      - in: query
+        name: deadline__gte
+        schema:
+          type: string
+          format: date-time
+      - in: query
+        name: deadline__lte
+        schema:
+          type: string
+          format: date-time
+      - in: query
+        name: description__icontains
+        schema:
+          type: string
+      - in: query
+        name: obligation
+        schema:
+          type: integer
+      - in: query
+        name: obligation__responsibility_type__title__iexact
+        schema:
+          type: string
+      - in: query
+        name: status
+        schema:
+          type: string
+          enum:
+          - COMPLETED
+          - HIDDEN
+          - IN_PROGRESS
+          - NOT_STARTED
+        description: |-
+          * `NOT_STARTED` - Не начата
+          * `IN_PROGRESS` - В работе
+          * `COMPLETED` - Завершена
+          * `HIDDEN` - Скрыта
+      - in: query
+        name: title__icontains
+        schema:
+          type: string
+      tags:
+      - tasks
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Task'
+          description: ''
+  /api/tasks/my/:
+    get:
+      operationId: tasks_my_list
+      parameters:
+      - in: query
+        name: assigned_to
+        schema:
+          type: integer
+      - in: query
+        name: assigned_to__last_name__icontains
+        schema:
+          type: string
+      - in: query
+        name: assigned_to__username__iexact
+        schema:
+          type: string
+      - in: query
+        name: created_by__last_name__icontains
+        schema:
+          type: string
+      - in: query
+        name: created_by__username
+        schema:
+          type: string
+      - in: query
+        name: deadline__gte
+        schema:
+          type: string
+          format: date-time
+      - in: query
+        name: deadline__lte
+        schema:
+          type: string
+          format: date-time
+      - in: query
+        name: description__icontains
+        schema:
+          type: string
+      - in: query
+        name: obligation
+        schema:
+          type: integer
+      - in: query
+        name: obligation__responsibility_type__title__iexact
+        schema:
+          type: string
+      - in: query
+        name: status
+        schema:
+          type: string
+          enum:
+          - COMPLETED
+          - HIDDEN
+          - IN_PROGRESS
+          - NOT_STARTED
+        description: |-
+          * `NOT_STARTED` - Не начата
+          * `IN_PROGRESS` - В работе
+          * `COMPLETED` - Завершена
+          * `HIDDEN` - Скрыта
+      - in: query
+        name: title__icontains
+        schema:
+          type: string
+      tags:
+      - tasks
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Task'
+          description: ''
+  /api/tasks/my/completed/:
+    get:
+      operationId: tasks_my_completed_list
+      parameters:
+      - in: query
+        name: assigned_to
+        schema:
+          type: integer
+      - in: query
+        name: assigned_to__last_name__icontains
+        schema:
+          type: string
+      - in: query
+        name: assigned_to__username__iexact
+        schema:
+          type: string
+      - in: query
+        name: created_by__last_name__icontains
+        schema:
+          type: string
+      - in: query
+        name: created_by__username
+        schema:
+          type: string
+      - in: query
+        name: deadline__gte
+        schema:
+          type: string
+          format: date-time
+      - in: query
+        name: deadline__lte
+        schema:
+          type: string
+          format: date-time
+      - in: query
+        name: description__icontains
+        schema:
+          type: string
+      - in: query
+        name: obligation
+        schema:
+          type: integer
+      - in: query
+        name: obligation__responsibility_type__title__iexact
+        schema:
+          type: string
+      - in: query
+        name: status
+        schema:
+          type: string
+          enum:
+          - COMPLETED
+          - HIDDEN
+          - IN_PROGRESS
+          - NOT_STARTED
+        description: |-
+          * `NOT_STARTED` - Не начата
+          * `IN_PROGRESS` - В работе
+          * `COMPLETED` - Завершена
+          * `HIDDEN` - Скрыта
+      - in: query
+        name: title__icontains
+        schema:
+          type: string
       tags:
       - tasks
       security:
@@ -1186,14 +1447,42 @@ paths:
       responses:
         '204':
           description: No response body
+  /api/users/me/:
+    get:
+      operationId: users_me_retrieve
+      tags:
+      - users
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: ''
 components:
   schemas:
+    ActionEnum:
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+      type: integer
+      description: |-
+        * `0` - create
+        * `1` - update
+        * `2` - delete
+        * `3` - access
     Comment:
       type: object
       properties:
-        url:
+        id:
+          type: integer
+          readOnly: true
+        created_by_display:
           type: string
-          format: uri
           readOnly: true
         created_at:
           type: string
@@ -1202,23 +1491,96 @@ components:
         text:
           type: string
         created_by:
-          type: string
-          format: uri
+          type: integer
+          readOnly: true
         task:
-          type: string
-          format: uri
+          type: integer
+          readOnly: true
       required:
-      - created_at
-      - created_by
-      - task
       - text
-      - url
+    FrequencyTypeEnum:
+      enum:
+      - D
+      - W
+      - M
+      - Y
+      type: string
+      description: |-
+        * `D` - Ежедневно
+        * `W` - Каждую неделю
+        * `M` - Каждый месяц
+        * `Y` - Каждый год
+    LogEntry:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        actor_display:
+          type: string
+          readOnly: true
+        content_type:
+          type: string
+          title: Имя класса модели
+          readOnly: true
+        content_type_display:
+          type: string
+          readOnly: true
+        action_display:
+          type: string
+          readOnly: true
+        object_pk:
+          type: string
+          maxLength: 255
+        object_id:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: -9223372036854775808
+          format: int64
+          nullable: true
+          title: Идентификатор объекта
+        object_repr:
+          type: string
+          title: Object representation
+        serialized_data:
+          nullable: true
+        action:
+          allOf:
+          - $ref: '#/components/schemas/ActionEnum'
+          minimum: 0
+          maximum: 9223372036854775807
+        changes_text:
+          type: string
+          title: Сообщение об изменении
+        changes:
+          nullable: true
+          title: Сообщение об изменении
+        cid:
+          type: string
+          nullable: true
+          title: Correlation ID
+          maxLength: 255
+        remote_addr:
+          type: string
+          nullable: true
+          title: Remote address
+        timestamp:
+          type: string
+          format: date-time
+        additional_data:
+          nullable: true
+        actor:
+          type: integer
+          nullable: true
+      required:
+      - action
+      - object_pk
+      - object_repr
     MedicinalProduct:
       type: object
       properties:
-        url:
-          type: string
-          format: uri
+        id:
+          type: integer
           readOnly: true
         title:
           type: string
@@ -1226,16 +1588,18 @@ components:
         description:
           type: string
       required:
-      - description
       - title
-      - url
     Obligation:
       type: object
       properties:
-        url:
-          type: string
-          format: uri
+        id:
+          type: integer
           readOnly: true
+        pva_display:
+          type: string
+          readOnly: true
+        responsibility_type:
+          type: string
         title:
           type: string
           maxLength: 255
@@ -1248,82 +1612,67 @@ components:
           type: string
           format: date
         pva:
-          type: string
-          format: uri
-        responsibility_type:
-          type: string
-          format: uri
-          nullable: true
+          type: integer
       required:
-      - description
       - end_date
       - pva
+      - responsibility_type
       - start_date
       - title
-      - url
     PVA:
       type: object
       properties:
-        url:
-          type: string
-          format: uri
+        id:
+          type: integer
           readOnly: true
-        requisites:
-          type: string
-        description:
-          type: string
-        link:
-          type: string
-          maxLength: 2048
-        status:
-          type: string
-          maxLength: 100
-        start_date:
-          type: string
-          format: date
-        end_date:
-          type: string
-          format: date
-        partner:
-          type: string
-          format: uri
-          nullable: true
         medicinal_products:
           type: array
           items:
             type: string
-            format: uri
-      required:
-      - description
-      - end_date
-      - link
-      - medicinal_products
-      - requisites
-      - start_date
-      - status
-      - url
-    Partner:
-      type: object
-      properties:
-        url:
+        status_display:
           type: string
-          format: uri
           readOnly: true
-        name:
+        requisites:
           type: string
-          maxLength: 255
+          maxLength: 500
         description:
           type: string
+        pva_link:
+          type: string
+          maxLength: 2048
+        main_contract_link:
+          type: string
+          maxLength: 2048
+        status:
+          $ref: '#/components/schemas/PVAStatusEnum'
+        start_date:
+          type: string
+          format: date
+          nullable: true
+        end_date:
+          type: string
+          format: date
+          nullable: true
       required:
-      - description
-      - name
-      - url
+      - medicinal_products
+      - requisites
+    PVAStatusEnum:
+      enum:
+      - PLANNED
+      - ACTIVE
+      - ENDING
+      - COMPLETED
+      type: string
+      description: |-
+        * `PLANNED` - Планируемый
+        * `ACTIVE` - Заключен
+        * `ENDING` - Завершающийся
+        * `COMPLETED` - Завершен
     PatchedMedicinalProduct:
       type: object
       properties:
-        url:
-          type: string
-          format: uri
+        id:
+          type: integer
           readOnly: true
         title:
           type: string
@@ -1333,10 +1682,14 @@ components:
     PatchedObligation:
       type: object
       properties:
-        url:
-          type: string
-          format: uri
+        id:
+          type: integer
           readOnly: true
+        pva_display:
+          type: string
+          readOnly: true
+        responsibility_type:
+          type: string
         title:
           type: string
           maxLength: 255
@@ -1349,62 +1702,46 @@ components:
           type: string
           format: date
         pva:
-          type: string
-          format: uri
-        responsibility_type:
-          type: string
-          format: uri
-          nullable: true
+          type: integer
     PatchedPVA:
       type: object
       properties:
-        url:
-          type: string
-          format: uri
+        id:
+          type: integer
           readOnly: true
-        requisites:
-          type: string
-        description:
-          type: string
-        link:
-          type: string
-          maxLength: 2048
-        status:
-          type: string
-          maxLength: 100
-        start_date:
-          type: string
-          format: date
-        end_date:
-          type: string
-          format: date
-        partner:
-          type: string
-          format: uri
-          nullable: true
         medicinal_products:
           type: array
           items:
             type: string
-            format: uri
-    PatchedPartner:
-      type: object
-      properties:
-        url:
+        status_display:
           type: string
-          format: uri
           readOnly: true
-        name:
+        requisites:
           type: string
-          maxLength: 255
+          maxLength: 500
         description:
           type: string
+        pva_link:
+          type: string
+          maxLength: 2048
+        main_contract_link:
+          type: string
+          maxLength: 2048
+        status:
+          $ref: '#/components/schemas/PVAStatusEnum'
+        start_date:
+          type: string
+          format: date
+          nullable: true
+        end_date:
+          type: string
+          format: date
+          nullable: true
     PatchedResponsibilityType:
       type: object
       properties:
-        url:
-          type: string
-          format: uri
+        id:
+          type: integer
           readOnly: true
         title:
           type: string
@@ -1412,9 +1749,28 @@ components:
     PatchedTask:
       type: object
       properties:
-        url:
+        id:
+          type: integer
+          readOnly: true
+        schedule:
+          $ref: '#/components/schemas/TaskSchedule'
+        status_display:
           type: string
-          format: uri
+          readOnly: true
+        created_by_display:
+          type: string
+          readOnly: true
+        assigned_to_display:
+          type: string
+          readOnly: true
+        obligation_display:
+          type: string
+          readOnly: true
+        pva_display:
+          type: string
+          readOnly: true
+        responsibility_type_display:
+          type: string
           readOnly: true
         title:
           type: string
@@ -1422,7 +1778,9 @@ components:
         description:
           type: string
         status:
-          $ref: '#/components/schemas/StatusEnum'
+          allOf:
+          - $ref: '#/components/schemas/TaskStatusEnum'
+          readOnly: true
         deadline:
           type: string
           format: date-time
@@ -1430,23 +1788,15 @@ components:
           type: boolean
         completion_evidence_link:
           type: string
-          nullable: true
           maxLength: 2048
         created_by:
-          type: string
-          format: uri
+          type: integer
           readOnly: true
         assigned_to:
-          type: string
-          format: uri
-          nullable: true
-        schedule:
-          type: string
-          format: uri
+          type: integer
           nullable: true
         obligation:
-          type: string
-          format: uri
+          type: integer
     PatchedUser:
       type: object
       properties:
@@ -1461,19 +1811,20 @@ components:
         last_login:
           type: string
           format: date-time
+          readOnly: true
           nullable: true
           title: Последний вход
         is_superuser:
           type: boolean
+          readOnly: true
           title: Статус суперпользователя
           description: Указывает, что пользователь имеет все права без явного их назначения.
         username:
           type: string
+          readOnly: true
           title: Имя пользователя
           description: Обязательное поле. Не более 150 символов. Только буквы, цифры
             и символы @/./+/-/_.
-          pattern: ^[\w.@+-]+$
-          maxLength: 150
         first_name:
           type: string
           title: Имя
@@ -1489,62 +1840,57 @@ components:
           maxLength: 254
         is_staff:
           type: boolean
+          readOnly: true
           title: Статус персонала
           description: Отметьте, если пользователь может входить в административную
             часть сайта.
         is_active:
           type: boolean
+          readOnly: true
           title: Активный
           description: Отметьте, если пользователь должен считаться активным. Уберите
             эту отметку вместо удаления учётной записи.
         date_joined:
           type: string
           format: date-time
+          readOnly: true
           title: Дата регистрации
-        groups:
-          type: array
-          items:
-            type: integer
-            title: Группы
-          title: Группы
-          description: Группы, к которым принадлежит данный пользователь. Пользователь
-            получит все права, указанные в каждой из его/её групп.
-        user_permissions:
-          type: array
-          items:
-            type: integer
-            title: Права пользователя
-          title: Права пользователя
-          description: Индивидуальные права данного пользователя.
     ResponsibilityType:
       type: object
       properties:
-        url:
-          type: string
-          format: uri
+        id:
+          type: integer
           readOnly: true
         title:
           type: string
           maxLength: 255
       required:
       - title
-      - url
-    StatusEnum:
-      enum:
-      - Not Started
-      - In Progress
-      - Completed
-      type: string
-      description: |-
-        * `Not Started` - Не начата
-        * `In Progress` - В работе
-        * `Completed` - Завершена
     Task:
       type: object
       properties:
-        url:
+        id:
+          type: integer
+          readOnly: true
+        schedule:
+          $ref: '#/components/schemas/TaskSchedule'
+        status_display:
           type: string
-          format: uri
+          readOnly: true
+        created_by_display:
+          type: string
+          readOnly: true
+        assigned_to_display:
+          type: string
+          readOnly: true
+        obligation_display:
+          type: string
+          readOnly: true
+        pva_display:
+          type: string
+          readOnly: true
+        responsibility_type_display:
+          type: string
           readOnly: true
         title:
           type: string
@@ -1552,7 +1898,9 @@ components:
         description:
           type: string
         status:
-          $ref: '#/components/schemas/StatusEnum'
+          allOf:
+          - $ref: '#/components/schemas/TaskStatusEnum'
+          readOnly: true
         deadline:
           type: string
           format: date-time
@@ -1560,30 +1908,82 @@ components:
           type: boolean
         completion_evidence_link:
           type: string
-          nullable: true
           maxLength: 2048
         created_by:
-          type: string
-          format: uri
+          type: integer
           readOnly: true
         assigned_to:
-          type: string
-          format: uri
-          nullable: true
-        schedule:
-          type: string
-          format: uri
+          type: integer
           nullable: true
         obligation:
-          type: string
-          format: uri
+          type: integer
       required:
-      - created_by
       - deadline
-      - description
       - obligation
       - title
-      - url
+    TaskSchedule:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        frequency_type:
+          $ref: '#/components/schemas/FrequencyTypeEnum'
+        day_of_week:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: -9223372036854775808
+          format: int64
+          nullable: true
+        week_of_month:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: -9223372036854775808
+          format: int64
+          nullable: true
+        day_of_month:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: -9223372036854775808
+          format: int64
+          nullable: true
+        month_of_year:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: -9223372036854775808
+          format: int64
+          nullable: true
+        start_date:
+          type: string
+          format: date
+        end_date:
+          type: string
+          format: date
+      required:
+      - end_date
+      - start_date
+    TaskStatus:
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/TaskStatusEnum'
+        completion_evidence_link:
+          type: string
+          maxLength: 2048
+      required:
+      - status
+    TaskStatusEnum:
+      enum:
+      - NOT_STARTED
+      - IN_PROGRESS
+      - COMPLETED
+      - HIDDEN
+      type: string
+      description: |-
+        * `NOT_STARTED` - Не начата
+        * `IN_PROGRESS` - В работе
+        * `COMPLETED` - Завершена
+        * `HIDDEN` - Скрыта
     TokenObtainPair:
       type: object
       properties:
@@ -1600,9 +2000,7 @@ components:
           type: string
           readOnly: true
       required:
-      - access
       - password
-      - refresh
       - username
     TokenRefresh:
       type: object
@@ -1614,7 +2012,6 @@ components:
           type: string
           writeOnly: true
       required:
-      - access
       - refresh
     User:
       type: object
@@ -1630,19 +2027,20 @@ components:
         last_login:
           type: string
           format: date-time
+          readOnly: true
           nullable: true
           title: Последний вход
         is_superuser:
           type: boolean
+          readOnly: true
           title: Статус суперпользователя
           description: Указывает, что пользователь имеет все права без явного их назначения.
         username:
           type: string
+          readOnly: true
           title: Имя пользователя
           description: Обязательное поле. Не более 150 символов. Только буквы, цифры
             и символы @/./+/-/_.
-          pattern: ^[\w.@+-]+$
-          maxLength: 150
         first_name:
           type: string
           title: Имя
@@ -1658,37 +2056,23 @@ components:
           maxLength: 254
         is_staff:
           type: boolean
+          readOnly: true
           title: Статус персонала
           description: Отметьте, если пользователь может входить в административную
             часть сайта.
         is_active:
           type: boolean
+          readOnly: true
           title: Активный
           description: Отметьте, если пользователь должен считаться активным. Уберите
             эту отметку вместо удаления учётной записи.
         date_joined:
           type: string
           format: date-time
+          readOnly: true
           title: Дата регистрации
-        groups:
-          type: array
-          items:
-            type: integer
-            title: Группы
-          title: Группы
-          description: Группы, к которым принадлежит данный пользователь. Пользователь
-            получит все права, указанные в каждой из его/её групп.
-        user_permissions:
-          type: array
-          items:
-            type: integer
-            title: Права пользователя
-          title: Права пользователя
-          description: Индивидуальные права данного пользователя.
       required:
-      - id
       - password
-      - username
   securitySchemes:
     jwtAuth:
       type: http

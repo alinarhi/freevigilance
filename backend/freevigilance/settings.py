@@ -34,6 +34,8 @@ REST_FRAMEWORK = {
     'DEFAULT_SCHEMA_CLASS': (
         'drf_spectacular.openapi.AutoSchema'
     ),
+    # 'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
+    # 'PAGE_SIZE': 100
 }
 
 SIMPLE_JWT = {
@@ -46,7 +48,11 @@ SPECTACULAR_SETTINGS = {
     'DESCRIPTION': 'PVA Management Application for Pharmaceutical Companies.',
     'VERSION': '0.1.0',
     'SERVE_INCLUDE_SCHEMA': False,
-    # OTHER SETTINGS
+    'ENUM_NAME_OVERRIDES': {
+        'TaskStatusEnum' : 'api.models.Task.TASK_STATUS_CHOICES',
+        'PVAStatusEnum' : 'api.models.PVA.PVA_STATUS_CHOICES',
+    },
+    'COMPONENT_NO_READ_ONLY_REQUIRED': True, 
 }
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -90,8 +96,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'corsheaders.middleware.CorsMiddleware', #
-    'auditlog.middleware.AuditlogMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
+    'api.middleware.AuditlogMiddleware',
 ]
 
 ROOT_URLCONF = 'freevigilance.urls'

@@ -8,7 +8,6 @@ router.register(r'tasks', TaskViewSet)
 router.register(r'obligations', ObligationViewSet)
 router.register(r'responsibility-types', ResponsibilityTypeViewSet)
 router.register(r'medicinal-products', MedicinalProductViewSet)
-router.register(r'partners', PartnerViewSet)
 router.register(r'pvas', PVAViewSet)
 
 
@@ -17,6 +16,7 @@ urlpatterns = [
     path('obligations/<int:id>/tasks/', ObligationTaskListView.as_view(), name='obligation-tasks'),
     path('pvas/<int:id>/obligations/', PVAObligationListView.as_view(), name='pva-tasks'),
     path('tasks/<int:id>/comments/', CommentListCreateView.as_view(), name='task-comments'),
+    path('tasks/<int:id>/changelog/', TaskChangelogListView.as_view(), name='task-changelog'),
     path('auditlog/', AuditlogListView.as_view())
 ]
 
