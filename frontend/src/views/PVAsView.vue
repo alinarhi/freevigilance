@@ -5,6 +5,7 @@ import { computed, onMounted, ref } from 'vue'
 import { isAxiosError } from 'axios'
 import { handleAxiosError } from '@/utils/utils'
 import PVAForm from '@/components/PVAForm.vue'
+import router from '@/router'
 
 const pvasApi = new PvasApi(undefined, undefined, apiAxios)
 const pvas = ref<PVA[]>([])
@@ -57,6 +58,10 @@ const onSubmit = async (pva: PVA) => {
   await fetchPvas()
 }
 
+const toPvaView = (id: number) => {
+  router.push({ name: 'pva', params: { id } })
+}
+
 onMounted(fetchPvas)
 </script>
 
@@ -78,7 +83,7 @@ onMounted(fetchPvas)
       <div class="flex-1/5">Окончание действия</div>
     </div>
     <ul class="divide-y divide-gray-300">
-      <li v-for="pva in filteredPvas" :key="pva.id" @click="selectedPva = pva"
+      <li v-for="pva in filteredPvas" :key="pva.id" @click="selectedPva = pva" @dblclick="toPvaView(pva.id!)"
         class="cursor-pointer bg-gray-50 shadow-md rounded-lg py-4 mb-2">
         <div class="flex text-end gap-6 px-6">
           <div class="flex-none text-start"> {{ pva.id }}</div>
@@ -89,7 +94,7 @@ onMounted(fetchPvas)
         </div>
       </li>
     </ul>
-    <p>{{ selectedPva }}</p>
+    <!-- <p>{{ selectedPva }}</p> -->
 
     <Teleport to="body" v-if="showModal">
     <div class="overlay">

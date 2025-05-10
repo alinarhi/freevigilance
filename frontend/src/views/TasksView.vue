@@ -31,7 +31,9 @@ const fetchTasks = async () => {
     } else if (myAllOption.value === 'my' && actualArchivedOption.value === 'completed') {
       fetchedTasks.value = (await taskApi.tasksMyCompletedList()).data
     } else if (myAllOption.value === 'all' && actualArchivedOption.value === 'actual') {
-      fetchedTasks.value = (await taskApi.tasksList()).data
+      fetchedTasks.value = (await taskApi.tasksList()).data.filter((task) => {
+        return task.status !== TaskStatusEnum.Completed
+      })
     } else if (myAllOption.value === 'all' && actualArchivedOption.value === 'completed') {
       fetchedTasks.value = (await taskApi.tasksCompletedList()).data
     }
@@ -190,7 +192,8 @@ const onSubmit = async (task: Task) => {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  height: 80%;
+  /* height: 80%; */
+  max-height: min-content;
   min-width: min-content;
   width: 40%;
 }

@@ -3,6 +3,7 @@ import HomeView from '@/views/HomeView.vue'
 import LoginView from '@/views/LoginView.vue'
 import { useUserStore } from '@/stores/user';
 import PVAsView from '@/views/PVAsView.vue';
+import PVAObligationsView from '@/views/PVAObligationsView.vue';
 import AuditlogView from '@/views/AuditlogView.vue';
 import TaskView from '@/views/TaskView.vue';
 
@@ -31,6 +32,13 @@ const router = createRouter({
       path: '/pvas',
       name: 'pvas',
       component: PVAsView,
+      meta: {
+        requiresAuth: true
+      }
+    },{
+      path: '/pvas/:id',
+      name: 'pva',
+      component: PVAObligationsView,
       meta: {
         requiresAuth: true
       }

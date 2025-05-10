@@ -20,7 +20,7 @@ class TaskScheduleSerializer(serializers.ModelSerializer):
 
 class ObligationSerializer(serializers.ModelSerializer):
     pva_display = serializers.SlugRelatedField(slug_field='requisites', read_only=True, source='pva')
-    responsibility_type = serializers.SlugRelatedField(slug_field='title', queryset=ResponsibilityType.objects.all())
+    responsibility_type = serializers.SlugRelatedField(slug_field='title', queryset=ResponsibilityType.objects.all(), required=False)
     class Meta:
         model = Obligation
         fields = '__all__'
@@ -36,7 +36,7 @@ class MedicinalProductSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class PVASerializer(serializers.ModelSerializer):
-    medicinal_products = serializers.SlugRelatedField(slug_field='title', many=True, queryset=MedicinalProduct.objects.all())
+    medicinal_products = serializers.SlugRelatedField(slug_field='title', many=True, queryset=MedicinalProduct.objects.all(), required=False)
     status_display = serializers.CharField(source='get_status_display', read_only=True)
    
     class Meta:

@@ -1616,7 +1616,6 @@ components:
       required:
       - end_date
       - pva
-      - responsibility_type
       - start_date
       - title
     PVA:
@@ -1654,7 +1653,6 @@ components:
           format: date
           nullable: true
       required:
-      - medicinal_products
       - requisites
     PVAStatusEnum:
       enum:

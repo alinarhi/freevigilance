@@ -30,9 +30,8 @@ defineEmits<{
     <div class="text-sm">
       <p class="text-gray-600"> ID: {{ task.id }}</p>
       <p> Статус: {{ task.status_display }}</p>
-      <p v v-if="task.status === TaskStatusEnum.Completed"> Подтверждение выполнения: {{ task.completion_evidence_link
-      }}
-      </p>
+      <p v v-if="task.status === TaskStatusEnum.Completed"> Подтверждение выполнения: {{ task.completion_evidence_link }}</p>
+      <p v-if="task.is_recurring"> Повтор: {{ task.schedule?.frequency_type }}</p>
       <p> Исполнитель: {{ task.assigned_to_display ?? 'Не назначен' }} </p>
       <p> Создана: {{ task.created_by_display }} </p>
       <br>
@@ -45,7 +44,7 @@ defineEmits<{
 
     <hr class="text-gray-300 mt-20 mb-4">
     <div v-if="showButtons" class="flex gap-4">
-      <button @click="$emit('edit')"
+      <button v-if="task.status === TaskStatusEnum.NotStarted || task.status === TaskStatusEnum.InProgress " @click="$emit('edit')"
         class="cursor-pointer px-4 py-2 text-white font-bold bg-teal-600 hover:bg-teal-700 rounded-lg shadow-md">
         Редактировать
       </button>

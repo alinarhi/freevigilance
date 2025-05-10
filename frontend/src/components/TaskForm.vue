@@ -101,6 +101,7 @@ const fetchPvas = async () => {
 
 watch(localDeadline, (newValue) => {
   if (newValue) {
+    console.log(newValue)
     form.value.deadline = new Date(newValue).toISOString()
   }
 })
@@ -115,6 +116,12 @@ const handleSubmit = () => {
 
 onMounted(() => {
   if (props.task) {
+    const deadline = new Date(props.task.deadline)
+
+    // TODO: FIX!!!
+    localDeadline.value = deadline.toISOString().slice(0, 16)
+    
+    // localDeadline.value = `${deadline.getFullYear()}-${deadline.getMonth() >= 10 ? deadline.getMonth()}-${deadline.getDay()}T${deadline.getHours()}:${deadline.getMinutes()}`
     form.value = {
       ...props.task,
     }
@@ -134,41 +141,45 @@ onMounted(() => {
     }} задачи</div>
 
     <div class="space-y-6 overflow-y-auto">
-      <label class="block mb-1 font-semibold text-gray-700">Договор</label>
-      <div class="flex gap-4 items-center">
-        <div class="flex-1">
-          <select v-model="pvaID" :disabled="isReadonly" @change="fetchObligations(pvaID!)"
-            class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring focus:ring-blue-300"
-            required>
-            <option value="" disabled selected>Выберите договор</option>
-            <option v-for="pva in pvas" :key="pva.id" :value="pva.id">
-              {{ pva.requisites }} (#{{ pva.id }})
-            </option>
-          </select>
-        </div>
-        <div class="flex-none">
-          <button class="cursor-pointer font-semibold text-teal-700">
-            Добавить
-          </button>
+      <div v-if="mode === 'create'">
+        <label class="block mb-1 font-semibold text-gray-700">Договор</label>
+        <div class="flex gap-4 items-center">
+          <div class="flex-1">
+            <select v-model="pvaID" :disabled="isReadonly" @change="fetchObligations(pvaID!)"
+              class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring focus:ring-blue-300"
+              required>
+              <option value="" disabled selected>Выберите договор</option>
+              <option v-for="pva in pvas" :key="pva.id" :value="pva.id">
+                {{ pva.requisites }} (#{{ pva.id }})
+              </option>
+            </select>
+          </div>
+          <div class="flex-none">
+            <button class="cursor-pointer font-semibold text-teal-700">
+              Добавить
+            </button>
+          </div>
         </div>
       </div>
 
-      <label class="block mb-1 font-semibold text-gray-700">Обязательство</label>
-      <div class="flex gap-4 items-center">
-        <div class="flex-1">
-          <select v-model="form.obligation" :disabled="isReadonly || !pvaID"
-            class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring focus:ring-blue-300"
-            required>
-            <option value="" disabled selected>Выберите обязательство</option>
-            <option v-for="obligation in obligations" :key="obligation.id" :value="obligation.id">
-              {{ obligation.title }} (#{{ obligation.id }})
-            </option>
-          </select>
-        </div>
-        <div class="flex-none">
-          <button class="cursor-pointer font-semibold text-teal-700">
-            Добавить
-          </button>
+      <div v-if="mode === 'create'">
+        <label class="block mb-1 font-semibold text-gray-700">Обязательство</label>
+        <div class="flex gap-4 items-center">
+          <div class="flex-1">
+            <select v-model="form.obligation" :disabled="isReadonly || !pvaID"
+              class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring focus:ring-blue-300"
+              required>
+              <option value="" disabled selected>Выберите обязательство</option>
+              <option v-for="obligation in obligations" :key="obligation.id" :value="obligation.id">
+                {{ obligation.title }} (#{{ obligation.id }})
+              </option>
+            </select>
+          </div>
+          <div class="flex-none">
+            <button class="cursor-pointer font-semibold text-teal-700">
+              Добавить
+            </button>
+          </div>
         </div>
       </div>
 
@@ -230,7 +241,7 @@ onMounted(() => {
         </div>
       </div>
 
-      <div v-if="mode !== 'create'">
+      <div v-if="mode === 'readonly'">
         <label class="block mb-1 font-semibold text-gray-700">Создана</label>
         <label class="block mb-1"> {{ form.created_by }}</label>
       </div>
@@ -258,3 +269,9 @@ onMounted(() => {
     </div>
   </form>
 </template>
+
+<style scoped>
+textarea {
+  resize: none;
+}
+</style>
