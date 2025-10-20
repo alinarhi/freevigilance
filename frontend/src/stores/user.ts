@@ -1,8 +1,9 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
-import axios from 'axios'
+import apiAxios from '@/axios'
 import { jwtDecode } from 'jwt-decode'
 import type { User } from '@/api-client'
+import { AxiosError, isAxiosError } from 'axios'
 
 
 function isTokenExpired(token: string) {
@@ -30,7 +31,7 @@ export const useUserStore = defineStore('user', () => {
 
     const fetchUser = async () => {
         try {
-            const response = await axios.get(import.meta.env.VITE_API_URL + 'api/users/me/', {
+            const response = await apiAxios.get('api/users/me/', {
                 headers: {
                     Authorization: `Bearer ${accessToken.value}`,
                 },
@@ -46,17 +47,26 @@ export const useUserStore = defineStore('user', () => {
     const login = async (username: string, password: string) => {
         logout()
         try {
-            console.log('Trying to log in')
-            const response = await axios.post(import.meta.env.VITE_API_URL + 'api/token/', { username: username, password: password })
+            console.log('Trying to log in with username:', username)
+            const response = await apiAxios.post('api/token/', { username: username, password: password })
             accessToken.value = response.data.access
             refreshToken.value = response.data.refresh
             localStorage.setItem('access_token', response.data.access)
             localStorage.setItem('refresh_token', response.data.refresh)
 
-            fetchUser()
-            console.log('Logged in')
+            await fetchUser()
+            console.log('Logged in as:', user)
         } catch (err) {
-            throw new Error('Ошибка входа: неверные данные')
+            if (isAxiosError(err)) {
+                const axiosError = err as AxiosError
+                if (axiosError.status === 401) {
+                    throw new Error('Ошибка входа: неверные данные')
+                } else {
+                    throw new Error('Ошибка при обращении к серверу')
+                }
+            } else {
+                throw new Error('Неизвестная ошибка')
+            }
         }
     }
 
@@ -68,7 +78,7 @@ export const useUserStore = defineStore('user', () => {
 
         try {
             console.log('Trying to refresh token')
-            const response = await axios.post(import.meta.env.VITE_API_URL + 'api/token/refresh', { refresh: refreshToken.value })
+            const response = await apiAxios.post('api/token/refresh', { refresh: refreshToken.value })
             accessToken.value = response.data.access
             localStorage.setItem('access_token', response.data.access)
 

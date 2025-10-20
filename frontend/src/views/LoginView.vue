@@ -21,7 +21,6 @@ const onLogin = async () => {
     // router.push('/')
     router.push({ name: 'tasks' })
   } catch (error) {
-    console.error(error)
     if (isAxiosError(error)) {
       handleAxiosError(error)
     } else {
