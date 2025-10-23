@@ -86,19 +86,6 @@ const fetchPvas = async () => {
   }
 }
 
-// Fill form with task's content in edit mode
-// watch(
-//   () => props.task,
-//   (task) => {
-//     if (task) {
-//       form.value = {
-//         ...task,
-//       }
-//     }
-//   },
-//   { immediate: true }
-// )
-
 watch(localDeadline, (newValue) => {
   if (newValue) {
     console.log(newValue)
@@ -116,12 +103,9 @@ const handleSubmit = () => {
 
 onMounted(() => {
   if (props.task) {
-    const deadline = new Date(props.task.deadline)
-
-    // TODO: FIX!!!
-    localDeadline.value = deadline.toISOString().slice(0, 16)
+    const deadlineDate = new Date(props.task.deadline)
+    localDeadline.value = new Date(deadlineDate.getTime() - deadlineDate.getTimezoneOffset() * 60000).toISOString().slice(0, 16)
     
-    // localDeadline.value = `${deadline.getFullYear()}-${deadline.getMonth() >= 10 ? deadline.getMonth()}-${deadline.getDay()}T${deadline.getHours()}:${deadline.getMinutes()}`
     form.value = {
       ...props.task,
     }
