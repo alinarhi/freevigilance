@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { TaskStatusEnum, type Task } from '@/api-client';
+import { FrequencyTypeDisplay } from '@/utils/constants';
 
 const props = defineProps<{
   task: Task,
@@ -31,7 +32,7 @@ defineEmits<{
       <p class="text-gray-600"> ID: {{ task.id }}</p>
       <p> Статус: {{ task.status_display }}</p>
       <p v v-if="task.status === TaskStatusEnum.Completed"> Подтверждение выполнения: {{ task.completion_evidence_link }}</p>
-      <p v-if="task.is_recurring"> Повтор: {{ task.schedule?.frequency_type }}</p>
+      <p v-if="task.is_recurring && task.schedule?.frequency_type"> Повтор: {{ FrequencyTypeDisplay[task.schedule.frequency_type] }}</p>
       <p> Исполнитель: {{ task.assigned_to_display ?? 'Не назначен' }} </p>
       <p> Создана: {{ task.created_by_display }} </p>
       <br>

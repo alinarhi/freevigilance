@@ -1,10 +1,8 @@
 <script setup lang="ts">
 import TaskListItem from '@/components/TaskListItem.vue'
 import { TasksApi, Configuration, type Task } from '@/api-client'
-import apiAxios from '@/axios'
 import { ref, computed, onMounted, watch } from 'vue'
-import TaskCard from '@/components/TaskCard.vue'
-import { useUserStore } from '@/stores/user'
+
 
 const props = defineProps<{
   tasks: Task[],

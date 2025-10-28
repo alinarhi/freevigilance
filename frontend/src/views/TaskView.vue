@@ -10,6 +10,7 @@ import { isAxiosError } from 'axios'
 import router from '@/router'
 import { handleAxiosError } from '@/utils/utils'
 import { useUserStore } from '@/stores/user'
+import { ActionDisplay } from '@/utils/constants'
 
 const userStore = useUserStore()
 const taskApi = new TasksApi(undefined, undefined, apiAxios)
@@ -94,7 +95,7 @@ onMounted(() => {
                         <span class="font-semibold">{{ new Date(log.timestamp ?? "").toLocaleString('ru-RU') }}:</span>
                         <span>Пользователь #{{ log.actor }}</span>
                         <span class="italic">{{ log.actor_display }}</span>
-                        <span>{{ actions.get(log.action_display) ?? log.action_display }}</span>
+                        <span>{{ ActionDisplay[log.action]}}</span>
                         <span class="font-bold text-end">{{ log.object_repr }}</span>
                     </div>
                     <p v-if="log.changes_text">Описание изменений: {{ log.changes_text }}</p>
@@ -109,7 +110,6 @@ onMounted(() => {
                         </li>
                     </ul>
                     <br>
-                    <!-- <p>{{ log }}</p> -->
                 </li>
             </ul>
         </div>

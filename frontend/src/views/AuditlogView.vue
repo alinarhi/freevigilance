@@ -4,6 +4,7 @@ import { AuditlogApi, type LogEntry } from '@/api-client'
 import { onMounted, ref } from 'vue'
 import { isAxiosError } from 'axios'
 import { handleAxiosError } from '@/utils/utils'
+import { ActionDisplay } from '@/utils/constants'
 
 const logsApi = new AuditlogApi(undefined, undefined, apiAxios)
 const logs = ref<LogEntry[]>([])
@@ -20,11 +21,6 @@ const fetchLogs = async () => {
   }
 }
 
-const actions = new Map();
-actions.set('create', 'создал(-а)')
-actions.set('update', 'изменил(-а)')
-actions.set('delete', 'удалил(-а)')
-
 onMounted(fetchLogs)
 </script>
 
@@ -35,8 +31,8 @@ onMounted(fetchLogs)
         <div class="flex flex-wrap gap-x-2 items-center">
           <span class="font-semibold">{{ new Date(log.timestamp ?? "").toLocaleString('ru-RU') }}:</span>
           <span>Пользователь #{{ log.actor }}</span>
-          <span class="italic">{{ log.actor_display }}</span>
-          <span>{{ actions.get(log.action_display) ?? log.action_display }}</span>
+          <span class="font-bold italic">{{ log.actor_display }}</span>
+          <span>{{ ActionDisplay[log.action] }}</span>
           <span>объект типа</span>
           <span class="italic">"{{ log.content_type_display }}": </span>
           <span class="font-bold text-end">{{ log.object_repr }}</span>
@@ -53,7 +49,6 @@ onMounted(fetchLogs)
           </li>
         </ul>
         <br>
-        <!-- <p>{{ log }}</p> -->
       </li>
     </ul>
   </div>

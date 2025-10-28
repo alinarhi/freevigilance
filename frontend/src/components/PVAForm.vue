@@ -2,18 +2,13 @@
 import { ref, computed, onMounted } from 'vue'
 import type { PVA, MedicinalProduct } from '@/api-client'
 import { PVAStatusEnum, MedicinalProductsApi } from '@/api-client'
+import { PVAStatusDisplay } from '@/utils/constants'
 import apiAxios from '@/axios'
 import { isAxiosError } from 'axios'
 import { handleAxiosError } from '@/utils/utils'
 
 export type FormMode = 'create' | 'edit' | 'readonly'
 const medsApi = new MedicinalProductsApi(undefined, undefined, apiAxios)
-
-const status_types = new Map()
-status_types.set(PVAStatusEnum.Active, 'Заключен')
-status_types.set(PVAStatusEnum.Planned, 'Планируемый')
-status_types.set(PVAStatusEnum.Ending, 'Завершающийся')
-status_types.set(PVAStatusEnum.Completed, 'Завершен')
 
 const props = defineProps<{
   mode: FormMode
@@ -105,7 +100,7 @@ onMounted(() => {
         class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring focus:ring-blue-300"
         required>
         <option v-for="status in Object.values(PVAStatusEnum)" :key="status" :value="status">
-          {{ status_types.get(status) }}
+          {{ PVAStatusDisplay[status] }}
         </option>
       </select>
     </div>

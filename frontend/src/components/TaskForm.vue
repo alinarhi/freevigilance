@@ -2,6 +2,7 @@
 import { ref, watch, computed, onMounted } from 'vue'
 import type { Task, Obligation, PVA, User, TaskSchedule } from '@/api-client'
 import { FrequencyTypeEnum, TaskStatusEnum, UsersApi, ObligationsApi, PvasApi } from '@/api-client'
+import { FrequencyTypeDisplay, TaskStatusDisplay } from '@/utils/constants'
 import apiAxios from '@/axios'
 import { isAxiosError } from 'axios'
 import { handleAxiosError } from '@/utils/utils'
@@ -10,12 +11,6 @@ export type TaskFormMode = 'create' | 'edit' | 'readonly'
 const usersApi = new UsersApi(undefined, undefined, apiAxios)
 const obligationsApi = new ObligationsApi(undefined, undefined, apiAxios)
 const pvasApi = new PvasApi(undefined, undefined, apiAxios)
-
-const frequency_types = new Map();
-frequency_types.set(FrequencyTypeEnum.D, 'Ежедневно')
-frequency_types.set(FrequencyTypeEnum.W, 'Каждую неделю')
-frequency_types.set(FrequencyTypeEnum.M, 'Каждый месяц')
-frequency_types.set(FrequencyTypeEnum.Y, 'Каждый год')
 
 const props = defineProps<{
   mode: TaskFormMode
@@ -192,7 +187,7 @@ onMounted(() => {
         <select v-model="form.status" :disabled="isReadonly"
           class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring focus:ring-blue-300">
           <option v-for="status in Object.values(TaskStatusEnum)" :key="status" :value="status">
-            {{ status }}
+            {{ TaskStatusDisplay[status] }}
           </option>
         </select>
       </div>
@@ -210,7 +205,7 @@ onMounted(() => {
             required>
             <option value="">Выберите тип повторения</option>
             <option v-for="type in Object.values(FrequencyTypeEnum)" :key="type" :value="type">
-              {{ frequency_types.get(type) }}
+              {{ FrequencyTypeDisplay[type] }}
             </option>
           </select>
         </div>
