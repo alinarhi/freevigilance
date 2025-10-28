@@ -41,8 +41,7 @@ const form = ref<Task>({
   assigned_to: null,
   schedule: {
     frequency_type: undefined,
-    // TODO: fix
-    start_date: '2000-01-01',
+    start_date: new Date().toISOString().slice(0, 10),
     end_date: ''
   }
 })
