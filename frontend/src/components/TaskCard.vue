@@ -16,7 +16,7 @@ defineEmits<{
 </script>
 
 <template>
-  <div class="flex flex-col h-full wrap-anywhere bg-white p-4 text-lg">
+  <div class="flex flex-col h-full overflow-hidden wrap-anywhere bg-white p-4 text-lg">
     <div>
       <div class="text-sm text-gray-600">
         <p> Договор: {{ task.pva_display }}</p>

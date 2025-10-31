@@ -15,7 +15,6 @@ import { ActionDisplay } from '@/utils/constants'
 const userStore = useUserStore()
 const taskApi = new TasksApi(undefined, undefined, apiAxios)
 const ID = Number(router.currentRoute.value.params.id as string)
-// const ID = number(idParam)
 const task = ref<Task | null>(null)
 
 const comments = ref<Comment[]>([])
@@ -56,18 +55,18 @@ onMounted(() => {
 
 <template>
     <div v-if="notFound || !task" class="text-2xl text-center text-gray-600 p-10">404 Задача не найдена.</div>
-    <div v-else class="flex h-screen gap-4">
+    <div v-else class="flex h-full overflow-hidden gap-4">
         <!-- Left Column -->
-        <div class="flex flex-col w-2/3 gap-4">
+        <div class="w-3/5 flex-none flex flex-col overflow-hidden gap-4">
             <!-- Task Card -->
-            <div class="rounded-xl shadow-md">
-                <TaskCard :show-buttons="false" :task="task" />
+            <div class="h-2/3 flex-none">
+                <TaskCard class="rounded-xl shadow-md" :show-buttons="false" :task="task" />
             </div>
 
-            <!-- Scrollable Comments -->
-            <div class="flex-1 overflow-y-auto bg-white rounded-xl shadow-md p-4">
-                <h2 class="text-lg font-semibold mb-2">Комментарии</h2>
-                <ul class="space-y-3">
+            <!-- Comments -->
+            <div class="h-1/3 flex flex-col overflow-hidden bg-white rounded-xl shadow-md p-4">
+                <h2 class="text-lg font-semibold">Комментарии</h2>
+                <ul class="flex-1 overflow-y-auto space-y-3">
                     <li v-for="(comment, index) in comments" :key="index">
                         <div v-if="comment.created_by! === userStore.user?.id" class="text-end">
                             <div class="p-3 rounded-lg">{{ comment.text }}</div>
@@ -86,16 +85,17 @@ onMounted(() => {
             </div>
         </div>
 
+
         <!-- Right Column -->
-        <div class="w-1/3 overflow-y-auto bg-white rounded-xl shadow-md p-4">
+        <div class="w-2/5 flex flex-col overflow-hidden bg-white rounded-xl shadow-md p-4 wrap-anywhere">
             <h2 class="text-lg font-semibold mb-2">История изменений</h2>
-            <ul class="divide-y divide-gray-300">
+            <ul class="flex-1 overflow-y-auto divide-y divide-gray-300">
                 <li v-for="log in changelog" :key="log.id" class="p-2 bg-gray-100 rounded-lg">
                     <div class="flex flex-wrap gap-x-2 items-center">
                         <span class="font-semibold">{{ new Date(log.timestamp ?? "").toLocaleString('ru-RU') }}:</span>
                         <span>Пользователь #{{ log.actor }}</span>
                         <span class="italic">{{ log.actor_display }}</span>
-                        <span>{{ ActionDisplay[log.action]}}</span>
+                        <span>{{ ActionDisplay[log.action] }}</span>
                         <span class="font-bold text-end">{{ log.object_repr }}</span>
                     </div>
                     <p v-if="log.changes_text">Описание изменений: {{ log.changes_text }}</p>
@@ -105,7 +105,7 @@ onMounted(() => {
                         <li v-for="(values, field) in log.changes">
                             <div class="flex flex-wrap gap-x-2 items-center">
                                 <span class="font-semibold">{{ field }}:</span>
-                                <span class="italic">{{ values[0] }} -> {{ values[1] }}</span>
+                                <span class="italic whitespace-pre-wrap">{{ values[0] }} -> {{ values[1] }}</span>
                             </div>
                         </li>
                     </ul>
