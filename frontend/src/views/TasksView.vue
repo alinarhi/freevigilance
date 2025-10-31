@@ -135,35 +135,37 @@ const onSubmit = async (task: Task) => {
 </script>
 
 <template>
-  <div class="flex gap-4 max-w-screen justify-stretch">
-    <div class="flex-3/5">
-      <!-- Header -->
-      <div class="flex gap-4 justify-end-safe items-center font-bold mb-6">
-        <input v-model="search" placeholder="Поиск по тексту"
-          class="flex-1 font-normal input rounded-lg border-gray-500 p-4 bg-white shadow-md" />
-        <select v-model="myAllOption" @change="fetchTasks" class="flex-none cursor-pointer p-2">
-          <option value="my">мои</option>
-          <option value="all">все</option>
-        </select>
-        <select v-model="actualArchivedOption" @change="fetchTasks" class="flex-none cursor-pointer p-2">
-          <option value="actual">актуальные</option>
-          <option value="completed">завершенные</option>
-        </select>
-        <button @click="onCreate"
-          class="cursor-pointer text-white bg-teal-600 shadow-md rounded-lg py-2 px-10 font-bold hover:bg-teal-700">
-          Создать
-        </button>
-      </div>
-      <!-- Task List -->
-      <div v-if="filteredTasks.length == 0" class="text-2xl text-center text-gray-600 p-10">Задачи не найдены</div>
-      <TaskList class="flex-3/5" :tasks="filteredTasks" @select-task="onTaskSelected" />
+  <div class="flex flex-col h-full overflow-hidden">
+    <!-- Search Header -->
+    <div class="flex gap-4 justify-end-safe items-center font-bold mb-6">
+      <input v-model="search" placeholder="Поиск по тексту"
+        class="flex-1 font-normal input rounded-lg border-gray-500 p-4 bg-white shadow-md" />
+      <select v-model="myAllOption" @change="fetchTasks" class="cursor-pointer p-3">
+        <option value="my">мои</option>
+        <option value="all">все</option>
+      </select>
+      <select v-model="actualArchivedOption" @change="fetchTasks" class="cursor-pointer p-3">
+        <option value="actual">актуальные</option>
+        <option value="completed">завершенные</option>
+      </select>
+      <button @click="onCreate"
+        class="cursor-pointer text-white bg-teal-600 shadow-md rounded-lg py-3 px-10 font-bold hover:bg-teal-700">
+        Создать
+      </button>
     </div>
 
-    <TaskCard class="flex-2/5 h-fit rounded-lg shadow-md" v-if="selectedTask" :show-buttons="true" :task="selectedTask"
-    @close="selectedTask = null"
-    @edit="onEdit"
-    @details="onDetails" />
+    <div class="flex-1 flex overflow-hidden gap-4">
+      <!-- Task List -->
+      <div class="size-full overflow-y-auto">
+        <div v-if="filteredTasks.length == 0" class="text-2xl text-center text-gray-600 p-10">Задачи не найдены</div>
+        <TaskList :tasks="filteredTasks" @select-task="onTaskSelected" />
+      </div>
+      <!-- Task Card -->
+      <TaskCard class="w-2/5 flex-none h-full rounded-lg shadow-md" v-if="selectedTask" :show-buttons="true"
+        :task="selectedTask" @close="selectedTask = null" @edit="onEdit" @details="onDetails" />
+    </div>
   </div>
+
 
   <Teleport to="body" v-if="showModal">
     <div class="overlay">

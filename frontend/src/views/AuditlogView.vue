@@ -25,7 +25,7 @@ onMounted(fetchLogs)
 </script>
 
 <template>
-  <div>
+  <div class="h-full overflow-y-auto wrap-anywhere">
     <ul class="divide-y divide-gray-300">
       <li v-for="log in logs" :key="log.id" class="p-2">
         <div class="flex flex-wrap gap-x-2 items-center">
@@ -44,7 +44,7 @@ onMounted(fetchLogs)
           <li v-for="(values, field) in log.changes">
             <div class="flex flex-wrap gap-x-2 items-center">
               <span class="font-semibold">{{ field }}:</span>
-              <span class="italic">{{ values[0] }} -> {{ values[1] }}</span>
+              <span class="italic whitespace-pre-wrap">{{ values[0] }} -> {{ values[1] }}</span>
             </div>
           </li>
         </ul>

@@ -33,7 +33,6 @@ const groupedTasks = computed(() => {
   <div>
     <div v-for="group in groupedTasks" :key="group.deadline" class="mb-6">
       <h3 class="font-semibold text-lg mb-2">До {{ group.deadline }}</h3>
-      <h4></h4>
       <TaskListItem v-for="task in group.tasks" :key="task.id" :task="task" @click="$emit('selectTask', task)"
         class="cursor-pointer gap-2" />
     </div>

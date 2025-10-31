@@ -66,12 +66,13 @@ onMounted(fetchPvas)
 </script>
 
 <template>
-  <div class="gap-4">
+  <div class="flex flex-col h-full overflow-hidden">
+    <!-- Search Header -->
     <div class="flex gap-4 justify-end-safe items-center font-bold mb-6">
       <input v-model="search" placeholder="Поиск по тексту"
         class="flex-1 font-normal input rounded-lg border-gray-500 p-4 bg-white shadow-md" />
       <button @click="onCreate"
-        class="cursor-pointer text-white bg-teal-600 shadow-md rounded-lg py-2 px-10 font-bold hover:bg-teal-700">
+        class="cursor-pointer text-white bg-teal-600 shadow-md rounded-lg py-3 px-10 font-bold hover:bg-teal-700">
         Добавить
       </button>
     </div>
@@ -82,7 +83,8 @@ onMounted(fetchPvas)
       <div class="flex-1/5">Начало действия</div>
       <div class="flex-1/5">Окончание действия</div>
     </div>
-    <ul class="divide-y divide-gray-300">
+    <br>
+    <ul class="flex-1 overflow-y-auto divide-y divide-gray-300">
       <li v-for="pva in filteredPvas" :key="pva.id" @click="selectedPva = pva" @dblclick="toPvaView(pva.id!)"
         class="cursor-pointer bg-gray-50 shadow-md rounded-lg py-4 mb-2">
         <div class="flex text-end gap-6 px-6">
