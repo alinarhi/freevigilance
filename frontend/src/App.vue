@@ -25,10 +25,10 @@ const showSidebar = computed(() => route.name !== 'login')
       <hr class="text-teal-700">
       <br>
       <nav>
-        <ul class="space-y-2">
-          <li><RouterLink to="/tasks" class="link font-semibold">Задачи</RouterLink></li>
-          <li><RouterLink to="/pvas" class="link font-semibold">Договоры</RouterLink></li>
-          <li><RouterLink to="/auditlog" class="link font-semibold">Журнал действий</RouterLink></li>
+        <ul class="space-y-2 text-gray-100 font-semibold">
+          <li><RouterLink to="/tasks" activeClass="text-white font-bold">Задачи</RouterLink></li>
+          <li><RouterLink to="/pvas" activeClass="text-white font-bold">Договоры</RouterLink></li>
+          <li><RouterLink to="/auditlog" activeClass="text-white font-bold">Журнал действий</RouterLink></li>
         </ul>
       </nav>
     </aside>
