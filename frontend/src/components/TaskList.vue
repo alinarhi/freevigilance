@@ -10,6 +10,7 @@ const props = defineProps<{
 
 defineEmits<{
   (e: 'selectTask', task: Task): void
+  (e: 'openTask', task: Task): void
 }>()
 
 const groupedTasks = computed(() => {
@@ -33,7 +34,7 @@ const groupedTasks = computed(() => {
   <div>
     <div v-for="group in groupedTasks" :key="group.deadline" class="mb-6">
       <h3 class="font-semibold text-lg mb-2">До {{ group.deadline }}</h3>
-      <TaskListItem v-for="task in group.tasks" :key="task.id" :task="task" @click="$emit('selectTask', task)"
+      <TaskListItem v-for="task in group.tasks" :key="task.id" :task="task" @click="$emit('selectTask', task)" @dblclick="$emit('openTask', task)"
         class="cursor-pointer gap-2" />
     </div>
   </div>
