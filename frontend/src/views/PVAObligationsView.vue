@@ -3,13 +3,12 @@ import { onMounted, ref } from 'vue'
 
 import { type PVA, type Obligation, PVAStatusEnum } from '@/api-client'
 import { PvasApi, ObligationsApi } from '@/api-client'
-
+import { useRouter } from 'vue-router'
 import apiAxios from '@/axios'
 import { isAxiosError } from 'axios'
-import router from '@/router'
 import { handleAxiosError } from '@/utils/utils'
+import AppModal from '@/components/AppModal.vue'
 import ObligationForm from '@/components/ObligationForm.vue'
-import { Teleport } from 'vue'
 
 const status_types = new Map()
 status_types.set(PVAStatusEnum.Active, 'Заключен')
@@ -17,7 +16,7 @@ status_types.set(PVAStatusEnum.Planned, 'Планируемый')
 status_types.set(PVAStatusEnum.Ending, 'Завершающийся')
 status_types.set(PVAStatusEnum.Completed, 'Завершен')
 
-
+const router = useRouter()
 const pvasApi = new PvasApi(undefined, undefined, apiAxios)
 const obligationsApi = new ObligationsApi(undefined, undefined, apiAxios)
 const ID = Number(router.currentRoute.value.params.id as string)
@@ -85,7 +84,8 @@ onMounted(() => {
             </div>
 
             <div>
-                <button @click="showModal=true" class="cursor-pointer bg-teal-600 text-white font-bold px-6 py-2 rounded-lg">Добавить
+                <button @click="showModal = true"
+                    class="cursor-pointer bg-teal-600 text-white font-bold px-6 py-2 rounded-lg">Добавить
                     обязательство</button>
             </div>
 
@@ -105,37 +105,8 @@ onMounted(() => {
             </div>
         </div>
 
-        <Teleport to="body" v-if="showModal">
-            <div class="overlay">
-                <div class="modal">
-                    <ObligationForm :pva_id="pva.id!" :mode="'create'" @close="showModal = false" @submit="onSubmit" />
-                </div>
-            </div>
-        </Teleport>
-
+        <AppModal v-if="showModal">
+            <ObligationForm :pva_id="pva.id!" :mode="'create'" @close="showModal = false" @submit="onSubmit" />
+        </AppModal>
     </div>
 </template>
-
-<style scoped>
-.overlay {
-    position: fixed;
-    z-index: 998;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.6);
-}
-
-.modal {
-    position: fixed;
-    z-index: 999;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    /* height: 80%; */
-    max-height: min-content;
-    min-width: min-content;
-    width: 40%;
-}
-</style>

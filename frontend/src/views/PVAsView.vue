@@ -4,9 +4,12 @@ import { PvasApi, type PVA } from '@/api-client'
 import { computed, onMounted, ref } from 'vue'
 import { isAxiosError } from 'axios'
 import { handleAxiosError } from '@/utils/utils'
+import AppModal from '@/components/AppModal.vue'
 import PVAForm from '@/components/PVAForm.vue'
-import router from '@/router'
+import { useRouter, useRoute } from 'vue-router'
 
+const router = useRouter()
+const route = useRoute()
 const pvasApi = new PvasApi(undefined, undefined, apiAxios)
 const pvas = ref<PVA[]>([])
 const search = ref('')
@@ -96,38 +99,9 @@ onMounted(fetchPvas)
         </div>
       </li>
     </ul>
-    <!-- <p>{{ selectedPva }}</p> -->
 
-    <Teleport to="body" v-if="showModal">
-    <div class="overlay">
-      <div class="modal">
-        <PVAForm :pva="selectedPva" :mode="'create'" @close="showModal = false" @submit="onSubmit" />
-      </div>
-    </div>
-  </Teleport>
+    <AppModal v-if="showModal">
+      <PVAForm :pva="selectedPva" :mode="'create'" @close="showModal = false" @submit="onSubmit" />
+    </AppModal>
   </div>
-
 </template>
-
-<style scoped>
-.overlay {
-  position: fixed;
-  z-index: 998;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.6);
-}
-
-.modal {
-  position: fixed;
-  z-index: 999;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  height: 80%;
-  min-width: min-content;
-  width: 40%;
-}
-</style>

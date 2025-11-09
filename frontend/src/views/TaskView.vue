@@ -11,6 +11,9 @@ import router from '@/router'
 import { handleAxiosError } from '@/utils/utils'
 import { useUserStore } from '@/stores/user'
 import { ActionDisplay } from '@/utils/constants'
+import { useRoute } from 'vue-router'
+import AppModal from '@/components/AppModal.vue'
+import TaskForm from '@/components/TaskForm.vue'
 
 const userStore = useUserStore()
 const taskApi = new TasksApi(undefined, undefined, apiAxios)
@@ -151,5 +154,9 @@ onMounted(() => {
             </div>
         </div>
     </div>
+
+    <AppModal v-if="showTaskForm">
+        <TaskForm :task="task" :mode="'edit'" @close="showTaskForm = false" @submit="" />
+    </AppModal>
 
 </template>

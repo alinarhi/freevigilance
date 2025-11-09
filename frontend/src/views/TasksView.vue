@@ -2,6 +2,7 @@
 import { TasksApi, UsersApi, type Task, type User, type TaskStatus, TaskStatusEnum } from '@/api-client'
 import apiAxios from '@/axios'
 import { ref, computed, onMounted, watch } from 'vue'
+import AppModal from '@/components/AppModal.vue'
 import TaskCard from '@/components/TaskCard.vue'
 import TaskForm from '@/components/TaskForm.vue'
 import type { TaskFormMode } from '@/components/TaskForm.vue'
@@ -218,36 +219,7 @@ onMounted(async () => {
   </div>
 
 
-  <Teleport to="body" v-if="showTaskForm">
-    <div class="overlay">
-      <div class="modal">
-        <TaskForm :task="selectedTask" :mode="formMode" @close="showTaskForm = false" @submit="onTaskFormSubmit" />
-      </div>
-    </div>
-  </Teleport>
+  <AppModal v-if="showTaskForm">
+    <TaskForm :task="selectedTask" :mode="formMode" @close="showTaskForm = false" @submit="onTaskFormSubmit" />
+  </AppModal>
 </template>
-
-
-<style scoped>
-.overlay {
-  position: fixed;
-  z-index: 998;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.6);
-}
-
-.modal {
-  position: fixed;
-  z-index: 999;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  /* height: 80%; */
-  max-height: min-content;
-  min-width: min-content;
-  width: 40%;
-}
-</style>
