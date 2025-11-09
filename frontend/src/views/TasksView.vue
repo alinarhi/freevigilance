@@ -18,26 +18,36 @@ const userStore = useUserStore()
 const taskApi = new TasksApi(undefined, undefined, apiAxios)
 
 const fetchedTasks = ref<Task[]>([])
-const search = ref('')
+const search = computed({
+  get: () => route.query.search ?? '',
+  set: (search) => router.replace({ query: { ...route.query, search: search } })
+})
 
-const myAllOption = ref<'my' | 'all'>('my')
-const actualArchivedOption = ref<'actual' | 'completed'>('actual')
+const assigned = computed({
+  get: () => (route.query.assigned == 'my' || route.query.assigned == 'all') ? route.query.assigned : 'my',
+  set: (value) => router.replace({ query: { ...route.query, assigned: value } })
+})
+
+const status = computed({
+  get: () => (route.query.status == 'actual' || route.query.status == 'completed') ? route.query.status : 'actual',
+  set: (value) => router.replace({ query: { ...route.query, status: value } })
+})
 
 const selectedTask = ref<Task | null>(null)
-const showModal = ref(false)
+const showTaskForm = ref(false)
 const formMode = ref<TaskFormMode>('create')
 
 const fetchTasks = async () => {
   try {
-    if (myAllOption.value === 'my' && actualArchivedOption.value === 'actual') {
+    if (assigned.value === 'my' && status.value === 'actual') {
       fetchedTasks.value = (await taskApi.tasksMyList()).data
-    } else if (myAllOption.value === 'my' && actualArchivedOption.value === 'completed') {
+    } else if (assigned.value === 'my' && status.value === 'completed') {
       fetchedTasks.value = (await taskApi.tasksMyCompletedList()).data
-    } else if (myAllOption.value === 'all' && actualArchivedOption.value === 'actual') {
+    } else if (assigned.value === 'all' && status.value === 'actual') {
       fetchedTasks.value = (await taskApi.tasksList()).data.filter((task) => {
         return task.status !== TaskStatusEnum.Completed
       })
-    } else if (myAllOption.value === 'all' && actualArchivedOption.value === 'completed') {
+    } else if (assigned.value === 'all' && status.value === 'completed') {
       fetchedTasks.value = (await taskApi.tasksCompletedList()).data
     }
   } catch (error) {
@@ -53,6 +63,7 @@ const postTask = async (task: Task) => {
     const res = await taskApi.tasksCreate(task)
     if (res.status === 201) {
       alert('Задача успешно создана')
+      return res.data
     }
   } catch (error) {
     console.error(error)
@@ -68,6 +79,7 @@ const patchTask = async (task: Task) => {
     const res = await taskApi.tasksPartialUpdate(task.id!, task)
     if (res.status === 200) {
       alert('Задача успешно обновлена')
+      return res.data
     }
   } catch (error) {
     console.error(error)
@@ -83,7 +95,7 @@ const taskChangeStatus = async (task: Task, status: TaskStatus) => {
     if (res.status === 200) {
       alert('Статус задачи обновлен')
       await fetchTasks()
-      // restoreSelectedTaskFromRoute()
+      restoreSelectedTaskFromRoute()
     }
     else if (res.status === 201) {
       const newTask = res.data as unknown as Task
@@ -101,29 +113,31 @@ const taskChangeStatus = async (task: Task, status: TaskStatus) => {
 
 const filteredTasks = computed(() => {
   return fetchedTasks.value.filter((task) => {
-    const matchesSearch = task.title.toLowerCase().includes(search.value.trim().toLowerCase())
-      || task.description?.toLowerCase().includes(search.value.toLowerCase())
+    const matchesSearch = task.title.toLowerCase().includes(search.value.toString().trim().toLowerCase())
+      || task.description?.toLowerCase().includes(search.value.toString().toLowerCase())
     return matchesSearch
   })
 })
 
 const onTaskSelected = (task: Task) => {
-  if (!selectedTask.value) {
+  if (selectedTask.value !== task) {
     selectedTask.value = task
+    router.replace({ query: { ...route.query, selected: task.id } })
   } else {
     selectedTask.value = null
+    router.replace({ query: { ...route.query, selected: undefined } })
   }
 }
 
-const onCreate = () => {
+const onTaskCreate = () => {
   selectedTask.value = null
-  showModal.value = true
+  showTaskForm.value = true
   formMode.value = 'create'
 }
 
 const onTaskEdit = () => {
   if (selectedTask.value) {
-    showModal.value = true
+    showTaskForm.value = true
     formMode.value = 'edit'
   }
 }
@@ -132,20 +146,24 @@ const onTaskOpen = (task: Task) => {
   router.push({ name: 'task', params: { id: task.id } })
 }
 
-const onSubmit = async (task: Task) => {
+const onTaskFormSubmit = async (task: Task) => {
   switch (formMode.value) {
     case 'create':
-      await postTask(task)
+      const createdTask = await postTask(task)
       await fetchTasks()
+      if (createdTask) {
+        onTaskSelected(createdTask)
+      }
       break
     case 'edit':
       await patchTask(task)
       await fetchTasks()
+      restoreSelectedTaskFromRoute()
       break
     case 'readonly':
       break
   }
-  showModal.value = false
+  showTaskForm.value = false
 }
 
 const restoreSelectedTaskFromRoute = () => {
@@ -168,17 +186,17 @@ onMounted(async () => {
   <div class="flex flex-col h-full overflow-hidden">
     <!-- Search Header -->
     <div class="flex gap-4 justify-end-safe items-center font-bold mb-6">
-      <input v-model="search" placeholder="Поиск по тексту"
+      <input v-model.trim="search" placeholder="Поиск по тексту"
         class="flex-1 font-normal input rounded-lg border-gray-500 p-4 bg-white shadow-md" />
-      <select v-model="myAllOption" @change="fetchTasks" class="cursor-pointer p-3">
+      <select v-model="assigned" @change="fetchTasks" class="cursor-pointer p-3">
         <option value="my">мои</option>
         <option value="all">все</option>
       </select>
-      <select v-model="actualArchivedOption" @change="fetchTasks" class="cursor-pointer p-3">
+      <select v-model="status" @change="fetchTasks" class="cursor-pointer p-3">
         <option value="actual">актуальные</option>
         <option value="completed">завершенные</option>
       </select>
-      <button @click="onCreate"
+      <button @click="onTaskCreate"
         class="cursor-pointer text-white bg-teal-600 shadow-md rounded-lg py-3 px-10 font-bold hover:bg-teal-700">
         Создать
       </button>
@@ -200,10 +218,10 @@ onMounted(async () => {
   </div>
 
 
-  <Teleport to="body" v-if="showModal">
+  <Teleport to="body" v-if="showTaskForm">
     <div class="overlay">
       <div class="modal">
-        <TaskForm :task="selectedTask" :mode="formMode" @close="showModal = false" @submit="onSubmit" />
+        <TaskForm :task="selectedTask" :mode="formMode" @close="showTaskForm = false" @submit="onTaskFormSubmit" />
       </div>
     </div>
   </Teleport>
