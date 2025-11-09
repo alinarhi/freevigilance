@@ -85,7 +85,7 @@ onMounted(() => {
             <div class="w-3/5 flex-none flex flex-col overflow-hidden gap-2">
                 <!-- Task Card -->
                 <div class="h-3/5 grow">
-                    <TaskCard class="rounded-xl shadow-md" :show-buttons="false" :task="task" />
+                    <TaskCard class="rounded-xl shadow-md" :show-edit-button="false" :show-change-status-button="false" :show-details-button="false" :task="task" />
                 </div>
 
                 <!-- Comments -->

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { TasksApi, UsersApi, type Task, type User, TaskStatusEnum } from '@/api-client'
+import { TasksApi, UsersApi, type Task, type User, type TaskStatus, TaskStatusEnum } from '@/api-client'
 import apiAxios from '@/axios'
 import { ref, computed, onMounted, watch } from 'vue'
 import TaskCard from '@/components/TaskCard.vue'
@@ -9,7 +9,10 @@ import TaskList from '@/components/TaskList.vue'
 import { useUserStore } from '@/stores/user'
 import { AxiosError, isAxiosError } from 'axios'
 import { handleAxiosError } from '@/utils/utils'
-import router from '@/router'
+import { useRoute, useRouter } from 'vue-router';
+
+const router = useRouter()
+const route = useRoute()
 
 const userStore = useUserStore()
 const taskApi = new TasksApi(undefined, undefined, apiAxios)
@@ -74,8 +77,27 @@ const patchTask = async (task: Task) => {
   }
 }
 
-onMounted(fetchTasks)
-
+const taskChangeStatus = async (task: Task, status: TaskStatus) => {
+  try {
+    const res = await taskApi.tasksChangeStatusCreate(task.id!, status)
+    if (res.status === 200) {
+      alert('Статус задачи обновлен')
+      await fetchTasks()
+      // restoreSelectedTaskFromRoute()
+    }
+    else if (res.status === 201) {
+      const newTask = res.data as unknown as Task
+      alert(`Задача завершена.\nСоздана новая итерация повторяющейся задачи: ID = ${newTask.id}`)
+      await fetchTasks()
+      onTaskSelected(newTask)
+    }
+  } catch (error) {
+    console.error(error)
+    if (isAxiosError(error)) {
+      handleAxiosError(error)
+    }
+  }
+}
 
 const filteredTasks = computed(() => {
   return fetchedTasks.value.filter((task) => {
@@ -99,19 +121,15 @@ const onCreate = () => {
   formMode.value = 'create'
 }
 
-const onEdit = () => {
+const onTaskEdit = () => {
   if (selectedTask.value) {
     showModal.value = true
     formMode.value = 'edit'
   }
 }
 
-const onDetails = () => {
-  if (selectedTask.value) {
-    router.push({ name: 'task', params: { id: selectedTask.value.id } })
-    // showModal.value = true
-    // formMode.value = 'readonly'
-  }
+const onTaskOpen = (task: Task) => {
+  router.push({ name: 'task', params: { id: task.id } })
 }
 
 const onSubmit = async (task: Task) => {
@@ -127,10 +145,22 @@ const onSubmit = async (task: Task) => {
     case 'readonly':
       break
   }
-  selectedTask.value = null
   showModal.value = false
 }
 
+const restoreSelectedTaskFromRoute = () => {
+  if (route.query.selected) {
+    selectedTask.value = filteredTasks.value.find(t => t.id === Number(route.query.selected)) ?? null
+    if (!selectedTask.value) {
+      router.replace({ query: { ...route.query, selected: undefined } })
+    }
+  }
+}
+
+onMounted(async () => {
+  await fetchTasks()
+  restoreSelectedTaskFromRoute()
+})
 
 </script>
 
@@ -158,11 +188,14 @@ const onSubmit = async (task: Task) => {
       <!-- Task List -->
       <div class="size-full overflow-y-auto">
         <div v-if="filteredTasks.length == 0" class="text-2xl text-center text-gray-600 p-10">Задачи не найдены</div>
-        <TaskList :tasks="filteredTasks" @select-task="onTaskSelected" />
+        <TaskList :tasks="filteredTasks" @select-task="onTaskSelected" @open-task="onTaskOpen" />
       </div>
       <!-- Task Card -->
-      <TaskCard class="w-2/5 flex-none h-full rounded-lg shadow-md" v-if="selectedTask" :show-buttons="true"
-        :task="selectedTask" @close="selectedTask = null" @edit="onEdit" @details="onDetails" />
+      <TaskCard class="w-2/5 flex-none h-full rounded-lg shadow-md" v-if="selectedTask"
+        :show-edit-button="selectedTask.status !== TaskStatusEnum.Completed" :show-details-button="true"
+        :show-change-status-button="userStore.user?.id == selectedTask.assigned_to" :task="selectedTask"
+        @edit="onTaskEdit" @open-details="onTaskOpen(selectedTask)" @close="onTaskSelected(selectedTask)"
+        @change-status="(status) => taskChangeStatus(selectedTask!, status)" />
     </div>
   </div>
 

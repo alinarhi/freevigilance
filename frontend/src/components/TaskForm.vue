@@ -172,7 +172,7 @@ onMounted(() => {
         <label class="block mb-1 font-semibold text-gray-700">Описание</label>
         <textarea v-model="form.description" :disabled="isReadonly"
           class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring focus:ring-blue-300"
-          rows="3" />
+          rows="5" />
       </div>
 
       <div>
@@ -180,16 +180,6 @@ onMounted(() => {
         <input v-model="localDeadline" :disabled="isReadonly" type="datetime-local"
           class="w-fit border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring focus:ring-blue-300"
           required />
-      </div>
-
-      <div v-if="mode !== 'create'">
-        <label class="block mb-1 font-semibold text-gray-700">Статус</label>
-        <select v-model="form.status" :disabled="isReadonly"
-          class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring focus:ring-blue-300">
-          <option v-for="status in Object.values(TaskStatusEnum)" :key="status" :value="status">
-            {{ TaskStatusDisplay[status] }}
-          </option>
-        </select>
       </div>
 
       <div class="flex justify-stretch items-center gap-2">

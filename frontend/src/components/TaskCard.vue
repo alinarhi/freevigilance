@@ -1,23 +1,42 @@
 <script setup lang="ts">
-import { TaskStatusEnum, type Task } from '@/api-client';
+import { TaskStatusEnum, type Task, type TaskStatus } from '@/api-client';
 import { FrequencyTypeDisplay } from '@/utils/constants';
+import { PencilIcon, PlayIcon, CheckIcon, XMarkIcon } from '@heroicons/vue/24/solid';
+import { ref } from 'vue';
+
+const completion_evidence = ref('')
 
 const props = defineProps<{
   task: Task,
-  showButtons: boolean
+  showEditButton: boolean,
+  showDetailsButton: boolean,
+  showChangeStatusButton: boolean
 }>()
 
 defineEmits<{
   (e: 'close'): void
   (e: 'edit'): void
-  (e: 'details'): void
-  (e: 'changeStatus', status: TaskStatusEnum): void
+  (e: 'openDetails'): void
+  (e: 'changeStatus', status: TaskStatus): void
 }>();
+
 </script>
 
 <template>
   <div class="flex flex-col h-full overflow-hidden wrap-anywhere bg-white p-4 text-lg">
-    <div>
+    <div class="relative">
+      <div class="absolute top-0 right-0 flex gap-2">
+        <button v-if="showEditButton" @click="$emit('edit')" title="Редактировать"
+          class="cursor-pointer p-3 font-bold bg-teal-600 rounded-lg shadow-md hover:bg-teal-700">
+          <PencilIcon class="size-5 text-white" />
+        </button>
+        <button v-if="showDetailsButton" @click="$emit('close')" title="Закрыть"
+          class="cursor-pointer py-1 px-2 rounded-lg hover:bg-gray-100">
+          <XMarkIcon class="size-7 text-gray-700" />
+        </button>
+      </div>
+
+      <!-- Header -->
       <div class="text-sm text-gray-600">
         <p> Договор: {{ task.pva_display }}</p>
         <p> Обязательство: {{ task.obligation_display }} </p>
@@ -25,6 +44,7 @@ defineEmits<{
         <hr class="text-gray-300 mt-2 mb-4">
       </div>
 
+      <!-- Task Info -->
       <div class="text-2xl font-bold"> {{ task.title }}</div>
       <div class="font-semibold text-teal-700">До: {{ new Date(task.deadline).toLocaleString('ru-RU') }}</div>
 
@@ -43,31 +63,45 @@ defineEmits<{
       </div>
     </div>
 
+    <!-- Description -->
     <div class="flex-1 relative overflow-hidden">
       <div class="h-full overflow-y-auto text-gray-600 italic whitespace-pre-line">
         {{ task.description }}
         <br>
         <br>
       </div>
-      <div class="absolute bottom-0 left-0 w-full h-6 bg-gradient-to-t from-white to-transparent pointer-events-none"></div>
-    </div>
-
-
-    <div class="">
-      <hr class="text-gray-300 mt-20 mb-4">
-      <div v-if="showButtons" class="flex gap-4">
-        <button v-if="task.status === TaskStatusEnum.NotStarted || task.status === TaskStatusEnum.InProgress"
-          @click="$emit('edit')"
-          class="cursor-pointer px-4 py-2 text-white font-bold bg-teal-600 hover:bg-teal-700 rounded-lg shadow-md">
-          Редактировать
-        </button>
-        <button @click="$emit('details')" class="cursor-pointer px-4 py-2 font-semibold">
-          Подробнее
-        </button>
+      <!-- Fading effect to make overflow obvious -->
+      <div class="absolute bottom-0 left-0 w-full h-6 bg-gradient-to-t from-white to-transparent pointer-events-none">
       </div>
     </div>
 
-    <!-- <button v-if="showButtons" @click="$emit('close')"
-      class="cursor-pointer absolute top-4 right-4 px-4 py-1 font-bold bg-gray-300 rounded-lg shadow-md hover:bg-gray-400">x</button> -->
+    <hr class="text-gray-300 mt-20 mb-4">
+
+    <!-- Buttons -->
+    <div class="flex flex-col gap-8">
+      <form v-if="showChangeStatusButton && task.status === TaskStatusEnum.InProgress"
+        @submit.prevent="$emit('changeStatus', { status: TaskStatusEnum.Completed, completion_evidence_link: completion_evidence })"
+        class="flex flex-nowrap gap-2">
+        <input v-model.trim="completion_evidence" type="text" placeholder="Подтверждение выполнения (ссылка)"
+          class="flex-1 input rounded-lg border border-gray-300 p-2 bg-gray-50" required></input>
+        <button type="submit"
+          class="inline-flex items-center gap-2 cursor-pointer px-4 py-2 text-white font-semibold bg-teal-600 hover:bg-teal-700 rounded-lg shadow-md">
+          Завершить
+        </button>
+      </form>
+
+      <div class="flex flex-row-reverse justify-between">
+        <button v-if="showDetailsButton" @click="$emit('openDetails')"
+          class="cursor-pointer px-4 py-2 rounded-lg font-normal hover:bg-gray-100">
+          Подробнее
+        </button>
+        <button v-if="showChangeStatusButton && task.status === TaskStatusEnum.NotStarted"
+          @click="$emit('changeStatus', { status: TaskStatusEnum.InProgress })"
+          class="inline-flex items-center gap-2 cursor-pointer px-4 py-2 text-white font-semibold bg-teal-600 hover:bg-teal-700 rounded-lg shadow-md">
+          Взять в работу
+          <PlayIcon class="size-5" />
+        </button>
+      </div>
+    </div>
   </div>
 </template>
