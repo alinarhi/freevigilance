@@ -3,7 +3,6 @@ from .models import Task, PVA, Obligation
 from auditlog.models import LogEntry
 
 class TaskFilter(filters.FilterSet):
-    # status = filters.ChoiceFilter(Task.STATUS_CHOICES)
     class Meta:
         model = Task
         fields = {
@@ -14,6 +13,7 @@ class TaskFilter(filters.FilterSet):
             'assigned_to': ['exact'],
             'assigned_to__last_name': ['icontains'],
             'assigned_to__username': ['iexact'],
+            'created_by': ['exact'],
             'created_by__last_name': ['icontains'],
             'created_by__username': ['exact'],
             'obligation': ['exact'],
@@ -28,6 +28,8 @@ class ObligationFilter(filters.FilterSet):
             'title': ['icontains'],
             'description': ['icontains'],
             'responsibility_type__title': ['iexact'],
+            'start_date': ['gte', 'lte'],
+            'end_date': ['gte', 'lte'],
         }
 
 class PVAFilter(filters.FilterSet):
@@ -37,6 +39,8 @@ class PVAFilter(filters.FilterSet):
             'requisites': ['icontains'],
             'medicinal_products__title': ['icontains'],
             'status': ['exact'],
+            'start_date': ['gte', 'lte'],
+            'end_date': ['gte', 'lte'],
         }
         
 
@@ -46,7 +50,8 @@ class LogEntryFilter(filters.FilterSet):
         fields = {
             'action': ['exact'],
             'object_id': ['exact'],
-            'content_type__model': ['iexact'],
+            'content_type__model': ['exact'],
+            'actor': ['exact'],
             'actor__username': ['iexact'],
             'actor__last_name': ['icontains'],
             'timestamp': ['gte', 'lte'],

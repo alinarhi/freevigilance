@@ -23,6 +23,10 @@ paths:
           * `2` - delete
           * `3` - access
       - in: query
+        name: actor
+        schema:
+          type: integer
+      - in: query
         name: actor__last_name__icontains
         schema:
           type: string
@@ -31,7 +35,7 @@ paths:
         schema:
           type: string
       - in: query
-        name: content_type__model__iexact
+        name: content_type__model
         schema:
           type: string
       - in: query
@@ -211,6 +215,16 @@ paths:
         schema:
           type: string
       - in: query
+        name: end_date__gte
+        schema:
+          type: string
+          format: date
+      - in: query
+        name: end_date__lte
+        schema:
+          type: string
+          format: date
+      - in: query
         name: pva
         schema:
           type: integer
@@ -218,6 +232,16 @@ paths:
         name: responsibility_type__title__iexact
         schema:
           type: string
+      - in: query
+        name: start_date__gte
+        schema:
+          type: string
+          format: date
+      - in: query
+        name: start_date__lte
+        schema:
+          type: string
+          format: date
       - in: query
         name: title__icontains
         schema:
@@ -387,6 +411,16 @@ paths:
       operationId: pvas_list
       parameters:
       - in: query
+        name: end_date__gte
+        schema:
+          type: string
+          format: date
+      - in: query
+        name: end_date__lte
+        schema:
+          type: string
+          format: date
+      - in: query
         name: medicinal_products__title__icontains
         schema:
           type: string
@@ -394,6 +428,16 @@ paths:
         name: requisites__icontains
         schema:
           type: string
+      - in: query
+        name: start_date__gte
+        schema:
+          type: string
+          format: date
+      - in: query
+        name: start_date__lte
+        schema:
+          type: string
+          format: date
       - in: query
         name: status
         schema:
@@ -726,6 +770,10 @@ paths:
         schema:
           type: string
       - in: query
+        name: created_by
+        schema:
+          type: integer
+      - in: query
         name: created_by__last_name__icontains
         schema:
           type: string
@@ -1038,6 +1086,10 @@ paths:
         schema:
           type: string
       - in: query
+        name: created_by
+        schema:
+          type: integer
+      - in: query
         name: created_by__last_name__icontains
         schema:
           type: string
@@ -1115,6 +1167,10 @@ paths:
         schema:
           type: string
       - in: query
+        name: created_by
+        schema:
+          type: integer
+      - in: query
         name: created_by__last_name__icontains
         schema:
           type: string
@@ -1191,6 +1247,10 @@ paths:
         name: assigned_to__username__iexact
         schema:
           type: string
+      - in: query
+        name: created_by
+        schema:
+          type: integer
       - in: query
         name: created_by__last_name__icontains
         schema:

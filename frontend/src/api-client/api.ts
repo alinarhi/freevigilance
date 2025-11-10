@@ -257,7 +257,7 @@ export interface Obligation {
      * @type {string}
      * @memberof Obligation
      */
-    'responsibility_type': string;
+    'responsibility_type'?: string;
     /**
      * 
      * @type {string}
@@ -306,7 +306,7 @@ export interface PVA {
      * @type {Array<string>}
      * @memberof PVA
      */
-    'medicinal_products': Array<string>;
+    'medicinal_products'?: Array<string>;
     /**
      * 
      * @type {string}
@@ -1083,16 +1083,17 @@ export const AuditlogApiAxiosParamCreator = function (configuration?: Configurat
         /**
          * 
          * @param {AuditlogListActionEnum} [action] * &#x60;0&#x60; - create * &#x60;1&#x60; - update * &#x60;2&#x60; - delete * &#x60;3&#x60; - access
+         * @param {number} [actor] 
          * @param {string} [actorLastNameIcontains] 
          * @param {string} [actorUsernameIexact] 
-         * @param {string} [contentTypeModelIexact] 
+         * @param {string} [contentTypeModel] 
          * @param {number} [objectId] 
          * @param {string} [timestampGte] 
          * @param {string} [timestampLte] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        auditlogList: async (action?: AuditlogListActionEnum, actorLastNameIcontains?: string, actorUsernameIexact?: string, contentTypeModelIexact?: string, objectId?: number, timestampGte?: string, timestampLte?: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        auditlogList: async (action?: AuditlogListActionEnum, actor?: number, actorLastNameIcontains?: string, actorUsernameIexact?: string, contentTypeModel?: string, objectId?: number, timestampGte?: string, timestampLte?: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             const localVarPath = `/api/auditlog/`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -1113,6 +1114,10 @@ export const AuditlogApiAxiosParamCreator = function (configuration?: Configurat
                 localVarQueryParameter['action'] = action;
             }
 
+            if (actor !== undefined) {
+                localVarQueryParameter['actor'] = actor;
+            }
+
             if (actorLastNameIcontains !== undefined) {
                 localVarQueryParameter['actor__last_name__icontains'] = actorLastNameIcontains;
             }
@@ -1121,8 +1126,8 @@ export const AuditlogApiAxiosParamCreator = function (configuration?: Configurat
                 localVarQueryParameter['actor__username__iexact'] = actorUsernameIexact;
             }
 
-            if (contentTypeModelIexact !== undefined) {
-                localVarQueryParameter['content_type__model__iexact'] = contentTypeModelIexact;
+            if (contentTypeModel !== undefined) {
+                localVarQueryParameter['content_type__model'] = contentTypeModel;
             }
 
             if (objectId !== undefined) {
@@ -1165,17 +1170,18 @@ export const AuditlogApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @param {AuditlogListActionEnum} [action] * &#x60;0&#x60; - create * &#x60;1&#x60; - update * &#x60;2&#x60; - delete * &#x60;3&#x60; - access
+         * @param {number} [actor] 
          * @param {string} [actorLastNameIcontains] 
          * @param {string} [actorUsernameIexact] 
-         * @param {string} [contentTypeModelIexact] 
+         * @param {string} [contentTypeModel] 
          * @param {number} [objectId] 
          * @param {string} [timestampGte] 
          * @param {string} [timestampLte] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async auditlogList(action?: AuditlogListActionEnum, actorLastNameIcontains?: string, actorUsernameIexact?: string, contentTypeModelIexact?: string, objectId?: number, timestampGte?: string, timestampLte?: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<LogEntry>>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.auditlogList(action, actorLastNameIcontains, actorUsernameIexact, contentTypeModelIexact, objectId, timestampGte, timestampLte, options);
+        async auditlogList(action?: AuditlogListActionEnum, actor?: number, actorLastNameIcontains?: string, actorUsernameIexact?: string, contentTypeModel?: string, objectId?: number, timestampGte?: string, timestampLte?: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<LogEntry>>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.auditlogList(action, actor, actorLastNameIcontains, actorUsernameIexact, contentTypeModel, objectId, timestampGte, timestampLte, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['AuditlogApi.auditlogList']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
@@ -1193,17 +1199,18 @@ export const AuditlogApiFactory = function (configuration?: Configuration, baseP
         /**
          * 
          * @param {AuditlogListActionEnum} [action] * &#x60;0&#x60; - create * &#x60;1&#x60; - update * &#x60;2&#x60; - delete * &#x60;3&#x60; - access
+         * @param {number} [actor] 
          * @param {string} [actorLastNameIcontains] 
          * @param {string} [actorUsernameIexact] 
-         * @param {string} [contentTypeModelIexact] 
+         * @param {string} [contentTypeModel] 
          * @param {number} [objectId] 
          * @param {string} [timestampGte] 
          * @param {string} [timestampLte] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        auditlogList(action?: AuditlogListActionEnum, actorLastNameIcontains?: string, actorUsernameIexact?: string, contentTypeModelIexact?: string, objectId?: number, timestampGte?: string, timestampLte?: string, options?: RawAxiosRequestConfig): AxiosPromise<Array<LogEntry>> {
-            return localVarFp.auditlogList(action, actorLastNameIcontains, actorUsernameIexact, contentTypeModelIexact, objectId, timestampGte, timestampLte, options).then((request) => request(axios, basePath));
+        auditlogList(action?: AuditlogListActionEnum, actor?: number, actorLastNameIcontains?: string, actorUsernameIexact?: string, contentTypeModel?: string, objectId?: number, timestampGte?: string, timestampLte?: string, options?: RawAxiosRequestConfig): AxiosPromise<Array<LogEntry>> {
+            return localVarFp.auditlogList(action, actor, actorLastNameIcontains, actorUsernameIexact, contentTypeModel, objectId, timestampGte, timestampLte, options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -1218,9 +1225,10 @@ export class AuditlogApi extends BaseAPI {
     /**
      * 
      * @param {AuditlogListActionEnum} [action] * &#x60;0&#x60; - create * &#x60;1&#x60; - update * &#x60;2&#x60; - delete * &#x60;3&#x60; - access
+     * @param {number} [actor] 
      * @param {string} [actorLastNameIcontains] 
      * @param {string} [actorUsernameIexact] 
-     * @param {string} [contentTypeModelIexact] 
+     * @param {string} [contentTypeModel] 
      * @param {number} [objectId] 
      * @param {string} [timestampGte] 
      * @param {string} [timestampLte] 
@@ -1228,8 +1236,8 @@ export class AuditlogApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof AuditlogApi
      */
-    public auditlogList(action?: AuditlogListActionEnum, actorLastNameIcontains?: string, actorUsernameIexact?: string, contentTypeModelIexact?: string, objectId?: number, timestampGte?: string, timestampLte?: string, options?: RawAxiosRequestConfig) {
-        return AuditlogApiFp(this.configuration).auditlogList(action, actorLastNameIcontains, actorUsernameIexact, contentTypeModelIexact, objectId, timestampGte, timestampLte, options).then((request) => request(this.axios, this.basePath));
+    public auditlogList(action?: AuditlogListActionEnum, actor?: number, actorLastNameIcontains?: string, actorUsernameIexact?: string, contentTypeModel?: string, objectId?: number, timestampGte?: string, timestampLte?: string, options?: RawAxiosRequestConfig) {
+        return AuditlogApiFp(this.configuration).auditlogList(action, actor, actorLastNameIcontains, actorUsernameIexact, contentTypeModel, objectId, timestampGte, timestampLte, options).then((request) => request(this.axios, this.basePath));
     }
 }
 
@@ -1794,13 +1802,17 @@ export const ObligationsApiAxiosParamCreator = function (configuration?: Configu
         /**
          * 
          * @param {string} [descriptionIcontains] 
+         * @param {string} [endDateGte] 
+         * @param {string} [endDateLte] 
          * @param {number} [pva] 
          * @param {string} [responsibilityTypeTitleIexact] 
+         * @param {string} [startDateGte] 
+         * @param {string} [startDateLte] 
          * @param {string} [titleIcontains] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        obligationsList: async (descriptionIcontains?: string, pva?: number, responsibilityTypeTitleIexact?: string, titleIcontains?: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        obligationsList: async (descriptionIcontains?: string, endDateGte?: string, endDateLte?: string, pva?: number, responsibilityTypeTitleIexact?: string, startDateGte?: string, startDateLte?: string, titleIcontains?: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             const localVarPath = `/api/obligations/`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -1821,12 +1833,36 @@ export const ObligationsApiAxiosParamCreator = function (configuration?: Configu
                 localVarQueryParameter['description__icontains'] = descriptionIcontains;
             }
 
+            if (endDateGte !== undefined) {
+                localVarQueryParameter['end_date__gte'] = (endDateGte as any instanceof Date) ?
+                    (endDateGte as any).toISOString().substring(0,10) :
+                    endDateGte;
+            }
+
+            if (endDateLte !== undefined) {
+                localVarQueryParameter['end_date__lte'] = (endDateLte as any instanceof Date) ?
+                    (endDateLte as any).toISOString().substring(0,10) :
+                    endDateLte;
+            }
+
             if (pva !== undefined) {
                 localVarQueryParameter['pva'] = pva;
             }
 
             if (responsibilityTypeTitleIexact !== undefined) {
                 localVarQueryParameter['responsibility_type__title__iexact'] = responsibilityTypeTitleIexact;
+            }
+
+            if (startDateGte !== undefined) {
+                localVarQueryParameter['start_date__gte'] = (startDateGte as any instanceof Date) ?
+                    (startDateGte as any).toISOString().substring(0,10) :
+                    startDateGte;
+            }
+
+            if (startDateLte !== undefined) {
+                localVarQueryParameter['start_date__lte'] = (startDateLte as any instanceof Date) ?
+                    (startDateLte as any).toISOString().substring(0,10) :
+                    startDateLte;
             }
 
             if (titleIcontains !== undefined) {
@@ -2039,14 +2075,18 @@ export const ObligationsApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @param {string} [descriptionIcontains] 
+         * @param {string} [endDateGte] 
+         * @param {string} [endDateLte] 
          * @param {number} [pva] 
          * @param {string} [responsibilityTypeTitleIexact] 
+         * @param {string} [startDateGte] 
+         * @param {string} [startDateLte] 
          * @param {string} [titleIcontains] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async obligationsList(descriptionIcontains?: string, pva?: number, responsibilityTypeTitleIexact?: string, titleIcontains?: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<Obligation>>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.obligationsList(descriptionIcontains, pva, responsibilityTypeTitleIexact, titleIcontains, options);
+        async obligationsList(descriptionIcontains?: string, endDateGte?: string, endDateLte?: string, pva?: number, responsibilityTypeTitleIexact?: string, startDateGte?: string, startDateLte?: string, titleIcontains?: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<Obligation>>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.obligationsList(descriptionIcontains, endDateGte, endDateLte, pva, responsibilityTypeTitleIexact, startDateGte, startDateLte, titleIcontains, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['ObligationsApi.obligationsList']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
@@ -2132,14 +2172,18 @@ export const ObligationsApiFactory = function (configuration?: Configuration, ba
         /**
          * 
          * @param {string} [descriptionIcontains] 
+         * @param {string} [endDateGte] 
+         * @param {string} [endDateLte] 
          * @param {number} [pva] 
          * @param {string} [responsibilityTypeTitleIexact] 
+         * @param {string} [startDateGte] 
+         * @param {string} [startDateLte] 
          * @param {string} [titleIcontains] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        obligationsList(descriptionIcontains?: string, pva?: number, responsibilityTypeTitleIexact?: string, titleIcontains?: string, options?: RawAxiosRequestConfig): AxiosPromise<Array<Obligation>> {
-            return localVarFp.obligationsList(descriptionIcontains, pva, responsibilityTypeTitleIexact, titleIcontains, options).then((request) => request(axios, basePath));
+        obligationsList(descriptionIcontains?: string, endDateGte?: string, endDateLte?: string, pva?: number, responsibilityTypeTitleIexact?: string, startDateGte?: string, startDateLte?: string, titleIcontains?: string, options?: RawAxiosRequestConfig): AxiosPromise<Array<Obligation>> {
+            return localVarFp.obligationsList(descriptionIcontains, endDateGte, endDateLte, pva, responsibilityTypeTitleIexact, startDateGte, startDateLte, titleIcontains, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -2214,15 +2258,19 @@ export class ObligationsApi extends BaseAPI {
     /**
      * 
      * @param {string} [descriptionIcontains] 
+     * @param {string} [endDateGte] 
+     * @param {string} [endDateLte] 
      * @param {number} [pva] 
      * @param {string} [responsibilityTypeTitleIexact] 
+     * @param {string} [startDateGte] 
+     * @param {string} [startDateLte] 
      * @param {string} [titleIcontains] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ObligationsApi
      */
-    public obligationsList(descriptionIcontains?: string, pva?: number, responsibilityTypeTitleIexact?: string, titleIcontains?: string, options?: RawAxiosRequestConfig) {
-        return ObligationsApiFp(this.configuration).obligationsList(descriptionIcontains, pva, responsibilityTypeTitleIexact, titleIcontains, options).then((request) => request(this.axios, this.basePath));
+    public obligationsList(descriptionIcontains?: string, endDateGte?: string, endDateLte?: string, pva?: number, responsibilityTypeTitleIexact?: string, startDateGte?: string, startDateLte?: string, titleIcontains?: string, options?: RawAxiosRequestConfig) {
+        return ObligationsApiFp(this.configuration).obligationsList(descriptionIcontains, endDateGte, endDateLte, pva, responsibilityTypeTitleIexact, startDateGte, startDateLte, titleIcontains, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -2358,13 +2406,17 @@ export const PvasApiAxiosParamCreator = function (configuration?: Configuration)
         },
         /**
          * 
+         * @param {string} [endDateGte] 
+         * @param {string} [endDateLte] 
          * @param {string} [medicinalProductsTitleIcontains] 
          * @param {string} [requisitesIcontains] 
+         * @param {string} [startDateGte] 
+         * @param {string} [startDateLte] 
          * @param {PvasListStatusEnum} [status] * &#x60;PLANNED&#x60; - Планируемый * &#x60;ACTIVE&#x60; - Заключен * &#x60;ENDING&#x60; - Завершающийся * &#x60;COMPLETED&#x60; - Завершен
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        pvasList: async (medicinalProductsTitleIcontains?: string, requisitesIcontains?: string, status?: PvasListStatusEnum, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        pvasList: async (endDateGte?: string, endDateLte?: string, medicinalProductsTitleIcontains?: string, requisitesIcontains?: string, startDateGte?: string, startDateLte?: string, status?: PvasListStatusEnum, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             const localVarPath = `/api/pvas/`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -2381,12 +2433,36 @@ export const PvasApiAxiosParamCreator = function (configuration?: Configuration)
             // http bearer authentication required
             await setBearerAuthToObject(localVarHeaderParameter, configuration)
 
+            if (endDateGte !== undefined) {
+                localVarQueryParameter['end_date__gte'] = (endDateGte as any instanceof Date) ?
+                    (endDateGte as any).toISOString().substring(0,10) :
+                    endDateGte;
+            }
+
+            if (endDateLte !== undefined) {
+                localVarQueryParameter['end_date__lte'] = (endDateLte as any instanceof Date) ?
+                    (endDateLte as any).toISOString().substring(0,10) :
+                    endDateLte;
+            }
+
             if (medicinalProductsTitleIcontains !== undefined) {
                 localVarQueryParameter['medicinal_products__title__icontains'] = medicinalProductsTitleIcontains;
             }
 
             if (requisitesIcontains !== undefined) {
                 localVarQueryParameter['requisites__icontains'] = requisitesIcontains;
+            }
+
+            if (startDateGte !== undefined) {
+                localVarQueryParameter['start_date__gte'] = (startDateGte as any instanceof Date) ?
+                    (startDateGte as any).toISOString().substring(0,10) :
+                    startDateGte;
+            }
+
+            if (startDateLte !== undefined) {
+                localVarQueryParameter['start_date__lte'] = (startDateLte as any instanceof Date) ?
+                    (startDateLte as any).toISOString().substring(0,10) :
+                    startDateLte;
             }
 
             if (status !== undefined) {
@@ -2561,14 +2637,18 @@ export const PvasApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
+         * @param {string} [endDateGte] 
+         * @param {string} [endDateLte] 
          * @param {string} [medicinalProductsTitleIcontains] 
          * @param {string} [requisitesIcontains] 
+         * @param {string} [startDateGte] 
+         * @param {string} [startDateLte] 
          * @param {PvasListStatusEnum} [status] * &#x60;PLANNED&#x60; - Планируемый * &#x60;ACTIVE&#x60; - Заключен * &#x60;ENDING&#x60; - Завершающийся * &#x60;COMPLETED&#x60; - Завершен
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async pvasList(medicinalProductsTitleIcontains?: string, requisitesIcontains?: string, status?: PvasListStatusEnum, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<PVA>>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.pvasList(medicinalProductsTitleIcontains, requisitesIcontains, status, options);
+        async pvasList(endDateGte?: string, endDateLte?: string, medicinalProductsTitleIcontains?: string, requisitesIcontains?: string, startDateGte?: string, startDateLte?: string, status?: PvasListStatusEnum, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<PVA>>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.pvasList(endDateGte, endDateLte, medicinalProductsTitleIcontains, requisitesIcontains, startDateGte, startDateLte, status, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['PvasApi.pvasList']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
@@ -2641,14 +2721,18 @@ export const PvasApiFactory = function (configuration?: Configuration, basePath?
         },
         /**
          * 
+         * @param {string} [endDateGte] 
+         * @param {string} [endDateLte] 
          * @param {string} [medicinalProductsTitleIcontains] 
          * @param {string} [requisitesIcontains] 
+         * @param {string} [startDateGte] 
+         * @param {string} [startDateLte] 
          * @param {PvasListStatusEnum} [status] * &#x60;PLANNED&#x60; - Планируемый * &#x60;ACTIVE&#x60; - Заключен * &#x60;ENDING&#x60; - Завершающийся * &#x60;COMPLETED&#x60; - Завершен
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        pvasList(medicinalProductsTitleIcontains?: string, requisitesIcontains?: string, status?: PvasListStatusEnum, options?: RawAxiosRequestConfig): AxiosPromise<Array<PVA>> {
-            return localVarFp.pvasList(medicinalProductsTitleIcontains, requisitesIcontains, status, options).then((request) => request(axios, basePath));
+        pvasList(endDateGte?: string, endDateLte?: string, medicinalProductsTitleIcontains?: string, requisitesIcontains?: string, startDateGte?: string, startDateLte?: string, status?: PvasListStatusEnum, options?: RawAxiosRequestConfig): AxiosPromise<Array<PVA>> {
+            return localVarFp.pvasList(endDateGte, endDateLte, medicinalProductsTitleIcontains, requisitesIcontains, startDateGte, startDateLte, status, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -2713,15 +2797,19 @@ export class PvasApi extends BaseAPI {
 
     /**
      * 
+     * @param {string} [endDateGte] 
+     * @param {string} [endDateLte] 
      * @param {string} [medicinalProductsTitleIcontains] 
      * @param {string} [requisitesIcontains] 
+     * @param {string} [startDateGte] 
+     * @param {string} [startDateLte] 
      * @param {PvasListStatusEnum} [status] * &#x60;PLANNED&#x60; - Планируемый * &#x60;ACTIVE&#x60; - Заключен * &#x60;ENDING&#x60; - Завершающийся * &#x60;COMPLETED&#x60; - Завершен
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof PvasApi
      */
-    public pvasList(medicinalProductsTitleIcontains?: string, requisitesIcontains?: string, status?: PvasListStatusEnum, options?: RawAxiosRequestConfig) {
-        return PvasApiFp(this.configuration).pvasList(medicinalProductsTitleIcontains, requisitesIcontains, status, options).then((request) => request(this.axios, this.basePath));
+    public pvasList(endDateGte?: string, endDateLte?: string, medicinalProductsTitleIcontains?: string, requisitesIcontains?: string, startDateGte?: string, startDateLte?: string, status?: PvasListStatusEnum, options?: RawAxiosRequestConfig) {
+        return PvasApiFp(this.configuration).pvasList(endDateGte, endDateLte, medicinalProductsTitleIcontains, requisitesIcontains, startDateGte, startDateLte, status, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -3444,6 +3532,7 @@ export const TasksApiAxiosParamCreator = function (configuration?: Configuration
          * @param {number} [assignedTo] 
          * @param {string} [assignedToLastNameIcontains] 
          * @param {string} [assignedToUsernameIexact] 
+         * @param {number} [createdBy] 
          * @param {string} [createdByLastNameIcontains] 
          * @param {string} [createdByUsername] 
          * @param {string} [deadlineGte] 
@@ -3456,7 +3545,7 @@ export const TasksApiAxiosParamCreator = function (configuration?: Configuration
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        tasksCompletedList: async (assignedTo?: number, assignedToLastNameIcontains?: string, assignedToUsernameIexact?: string, createdByLastNameIcontains?: string, createdByUsername?: string, deadlineGte?: string, deadlineLte?: string, descriptionIcontains?: string, obligation?: number, obligationResponsibilityTypeTitleIexact?: string, status?: TasksCompletedListStatusEnum, titleIcontains?: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        tasksCompletedList: async (assignedTo?: number, assignedToLastNameIcontains?: string, assignedToUsernameIexact?: string, createdBy?: number, createdByLastNameIcontains?: string, createdByUsername?: string, deadlineGte?: string, deadlineLte?: string, descriptionIcontains?: string, obligation?: number, obligationResponsibilityTypeTitleIexact?: string, status?: TasksCompletedListStatusEnum, titleIcontains?: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             const localVarPath = `/api/tasks/completed/`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -3483,6 +3572,10 @@ export const TasksApiAxiosParamCreator = function (configuration?: Configuration
 
             if (assignedToUsernameIexact !== undefined) {
                 localVarQueryParameter['assigned_to__username__iexact'] = assignedToUsernameIexact;
+            }
+
+            if (createdBy !== undefined) {
+                localVarQueryParameter['created_by'] = createdBy;
             }
 
             if (createdByLastNameIcontains !== undefined) {
@@ -3617,6 +3710,7 @@ export const TasksApiAxiosParamCreator = function (configuration?: Configuration
          * @param {number} [assignedTo] 
          * @param {string} [assignedToLastNameIcontains] 
          * @param {string} [assignedToUsernameIexact] 
+         * @param {number} [createdBy] 
          * @param {string} [createdByLastNameIcontains] 
          * @param {string} [createdByUsername] 
          * @param {string} [deadlineGte] 
@@ -3629,7 +3723,7 @@ export const TasksApiAxiosParamCreator = function (configuration?: Configuration
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        tasksList: async (assignedTo?: number, assignedToLastNameIcontains?: string, assignedToUsernameIexact?: string, createdByLastNameIcontains?: string, createdByUsername?: string, deadlineGte?: string, deadlineLte?: string, descriptionIcontains?: string, obligation?: number, obligationResponsibilityTypeTitleIexact?: string, status?: TasksListStatusEnum, titleIcontains?: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        tasksList: async (assignedTo?: number, assignedToLastNameIcontains?: string, assignedToUsernameIexact?: string, createdBy?: number, createdByLastNameIcontains?: string, createdByUsername?: string, deadlineGte?: string, deadlineLte?: string, descriptionIcontains?: string, obligation?: number, obligationResponsibilityTypeTitleIexact?: string, status?: TasksListStatusEnum, titleIcontains?: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             const localVarPath = `/api/tasks/`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -3658,6 +3752,10 @@ export const TasksApiAxiosParamCreator = function (configuration?: Configuration
                 localVarQueryParameter['assigned_to__username__iexact'] = assignedToUsernameIexact;
             }
 
+            if (createdBy !== undefined) {
+                localVarQueryParameter['created_by'] = createdBy;
+            }
+
             if (createdByLastNameIcontains !== undefined) {
                 localVarQueryParameter['created_by__last_name__icontains'] = createdByLastNameIcontains;
             }
@@ -3714,6 +3812,7 @@ export const TasksApiAxiosParamCreator = function (configuration?: Configuration
          * @param {number} [assignedTo] 
          * @param {string} [assignedToLastNameIcontains] 
          * @param {string} [assignedToUsernameIexact] 
+         * @param {number} [createdBy] 
          * @param {string} [createdByLastNameIcontains] 
          * @param {string} [createdByUsername] 
          * @param {string} [deadlineGte] 
@@ -3726,7 +3825,7 @@ export const TasksApiAxiosParamCreator = function (configuration?: Configuration
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        tasksMyCompletedList: async (assignedTo?: number, assignedToLastNameIcontains?: string, assignedToUsernameIexact?: string, createdByLastNameIcontains?: string, createdByUsername?: string, deadlineGte?: string, deadlineLte?: string, descriptionIcontains?: string, obligation?: number, obligationResponsibilityTypeTitleIexact?: string, status?: TasksMyCompletedListStatusEnum, titleIcontains?: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        tasksMyCompletedList: async (assignedTo?: number, assignedToLastNameIcontains?: string, assignedToUsernameIexact?: string, createdBy?: number, createdByLastNameIcontains?: string, createdByUsername?: string, deadlineGte?: string, deadlineLte?: string, descriptionIcontains?: string, obligation?: number, obligationResponsibilityTypeTitleIexact?: string, status?: TasksMyCompletedListStatusEnum, titleIcontains?: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             const localVarPath = `/api/tasks/my/completed/`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -3755,6 +3854,10 @@ export const TasksApiAxiosParamCreator = function (configuration?: Configuration
                 localVarQueryParameter['assigned_to__username__iexact'] = assignedToUsernameIexact;
             }
 
+            if (createdBy !== undefined) {
+                localVarQueryParameter['created_by'] = createdBy;
+            }
+
             if (createdByLastNameIcontains !== undefined) {
                 localVarQueryParameter['created_by__last_name__icontains'] = createdByLastNameIcontains;
             }
@@ -3811,6 +3914,7 @@ export const TasksApiAxiosParamCreator = function (configuration?: Configuration
          * @param {number} [assignedTo] 
          * @param {string} [assignedToLastNameIcontains] 
          * @param {string} [assignedToUsernameIexact] 
+         * @param {number} [createdBy] 
          * @param {string} [createdByLastNameIcontains] 
          * @param {string} [createdByUsername] 
          * @param {string} [deadlineGte] 
@@ -3823,7 +3927,7 @@ export const TasksApiAxiosParamCreator = function (configuration?: Configuration
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        tasksMyList: async (assignedTo?: number, assignedToLastNameIcontains?: string, assignedToUsernameIexact?: string, createdByLastNameIcontains?: string, createdByUsername?: string, deadlineGte?: string, deadlineLte?: string, descriptionIcontains?: string, obligation?: number, obligationResponsibilityTypeTitleIexact?: string, status?: TasksMyListStatusEnum, titleIcontains?: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        tasksMyList: async (assignedTo?: number, assignedToLastNameIcontains?: string, assignedToUsernameIexact?: string, createdBy?: number, createdByLastNameIcontains?: string, createdByUsername?: string, deadlineGte?: string, deadlineLte?: string, descriptionIcontains?: string, obligation?: number, obligationResponsibilityTypeTitleIexact?: string, status?: TasksMyListStatusEnum, titleIcontains?: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             const localVarPath = `/api/tasks/my/`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -3850,6 +3954,10 @@ export const TasksApiAxiosParamCreator = function (configuration?: Configuration
 
             if (assignedToUsernameIexact !== undefined) {
                 localVarQueryParameter['assigned_to__username__iexact'] = assignedToUsernameIexact;
+            }
+
+            if (createdBy !== undefined) {
+                localVarQueryParameter['created_by'] = createdBy;
             }
 
             if (createdByLastNameIcontains !== undefined) {
@@ -4101,6 +4209,7 @@ export const TasksApiFp = function(configuration?: Configuration) {
          * @param {number} [assignedTo] 
          * @param {string} [assignedToLastNameIcontains] 
          * @param {string} [assignedToUsernameIexact] 
+         * @param {number} [createdBy] 
          * @param {string} [createdByLastNameIcontains] 
          * @param {string} [createdByUsername] 
          * @param {string} [deadlineGte] 
@@ -4113,8 +4222,8 @@ export const TasksApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async tasksCompletedList(assignedTo?: number, assignedToLastNameIcontains?: string, assignedToUsernameIexact?: string, createdByLastNameIcontains?: string, createdByUsername?: string, deadlineGte?: string, deadlineLte?: string, descriptionIcontains?: string, obligation?: number, obligationResponsibilityTypeTitleIexact?: string, status?: TasksCompletedListStatusEnum, titleIcontains?: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<Task>>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.tasksCompletedList(assignedTo, assignedToLastNameIcontains, assignedToUsernameIexact, createdByLastNameIcontains, createdByUsername, deadlineGte, deadlineLte, descriptionIcontains, obligation, obligationResponsibilityTypeTitleIexact, status, titleIcontains, options);
+        async tasksCompletedList(assignedTo?: number, assignedToLastNameIcontains?: string, assignedToUsernameIexact?: string, createdBy?: number, createdByLastNameIcontains?: string, createdByUsername?: string, deadlineGte?: string, deadlineLte?: string, descriptionIcontains?: string, obligation?: number, obligationResponsibilityTypeTitleIexact?: string, status?: TasksCompletedListStatusEnum, titleIcontains?: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<Task>>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.tasksCompletedList(assignedTo, assignedToLastNameIcontains, assignedToUsernameIexact, createdBy, createdByLastNameIcontains, createdByUsername, deadlineGte, deadlineLte, descriptionIcontains, obligation, obligationResponsibilityTypeTitleIexact, status, titleIcontains, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['TasksApi.tasksCompletedList']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
@@ -4148,6 +4257,7 @@ export const TasksApiFp = function(configuration?: Configuration) {
          * @param {number} [assignedTo] 
          * @param {string} [assignedToLastNameIcontains] 
          * @param {string} [assignedToUsernameIexact] 
+         * @param {number} [createdBy] 
          * @param {string} [createdByLastNameIcontains] 
          * @param {string} [createdByUsername] 
          * @param {string} [deadlineGte] 
@@ -4160,8 +4270,8 @@ export const TasksApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async tasksList(assignedTo?: number, assignedToLastNameIcontains?: string, assignedToUsernameIexact?: string, createdByLastNameIcontains?: string, createdByUsername?: string, deadlineGte?: string, deadlineLte?: string, descriptionIcontains?: string, obligation?: number, obligationResponsibilityTypeTitleIexact?: string, status?: TasksListStatusEnum, titleIcontains?: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<Task>>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.tasksList(assignedTo, assignedToLastNameIcontains, assignedToUsernameIexact, createdByLastNameIcontains, createdByUsername, deadlineGte, deadlineLte, descriptionIcontains, obligation, obligationResponsibilityTypeTitleIexact, status, titleIcontains, options);
+        async tasksList(assignedTo?: number, assignedToLastNameIcontains?: string, assignedToUsernameIexact?: string, createdBy?: number, createdByLastNameIcontains?: string, createdByUsername?: string, deadlineGte?: string, deadlineLte?: string, descriptionIcontains?: string, obligation?: number, obligationResponsibilityTypeTitleIexact?: string, status?: TasksListStatusEnum, titleIcontains?: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<Task>>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.tasksList(assignedTo, assignedToLastNameIcontains, assignedToUsernameIexact, createdBy, createdByLastNameIcontains, createdByUsername, deadlineGte, deadlineLte, descriptionIcontains, obligation, obligationResponsibilityTypeTitleIexact, status, titleIcontains, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['TasksApi.tasksList']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
@@ -4171,6 +4281,7 @@ export const TasksApiFp = function(configuration?: Configuration) {
          * @param {number} [assignedTo] 
          * @param {string} [assignedToLastNameIcontains] 
          * @param {string} [assignedToUsernameIexact] 
+         * @param {number} [createdBy] 
          * @param {string} [createdByLastNameIcontains] 
          * @param {string} [createdByUsername] 
          * @param {string} [deadlineGte] 
@@ -4183,8 +4294,8 @@ export const TasksApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async tasksMyCompletedList(assignedTo?: number, assignedToLastNameIcontains?: string, assignedToUsernameIexact?: string, createdByLastNameIcontains?: string, createdByUsername?: string, deadlineGte?: string, deadlineLte?: string, descriptionIcontains?: string, obligation?: number, obligationResponsibilityTypeTitleIexact?: string, status?: TasksMyCompletedListStatusEnum, titleIcontains?: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<Task>>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.tasksMyCompletedList(assignedTo, assignedToLastNameIcontains, assignedToUsernameIexact, createdByLastNameIcontains, createdByUsername, deadlineGte, deadlineLte, descriptionIcontains, obligation, obligationResponsibilityTypeTitleIexact, status, titleIcontains, options);
+        async tasksMyCompletedList(assignedTo?: number, assignedToLastNameIcontains?: string, assignedToUsernameIexact?: string, createdBy?: number, createdByLastNameIcontains?: string, createdByUsername?: string, deadlineGte?: string, deadlineLte?: string, descriptionIcontains?: string, obligation?: number, obligationResponsibilityTypeTitleIexact?: string, status?: TasksMyCompletedListStatusEnum, titleIcontains?: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<Task>>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.tasksMyCompletedList(assignedTo, assignedToLastNameIcontains, assignedToUsernameIexact, createdBy, createdByLastNameIcontains, createdByUsername, deadlineGte, deadlineLte, descriptionIcontains, obligation, obligationResponsibilityTypeTitleIexact, status, titleIcontains, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['TasksApi.tasksMyCompletedList']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
@@ -4194,6 +4305,7 @@ export const TasksApiFp = function(configuration?: Configuration) {
          * @param {number} [assignedTo] 
          * @param {string} [assignedToLastNameIcontains] 
          * @param {string} [assignedToUsernameIexact] 
+         * @param {number} [createdBy] 
          * @param {string} [createdByLastNameIcontains] 
          * @param {string} [createdByUsername] 
          * @param {string} [deadlineGte] 
@@ -4206,8 +4318,8 @@ export const TasksApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async tasksMyList(assignedTo?: number, assignedToLastNameIcontains?: string, assignedToUsernameIexact?: string, createdByLastNameIcontains?: string, createdByUsername?: string, deadlineGte?: string, deadlineLte?: string, descriptionIcontains?: string, obligation?: number, obligationResponsibilityTypeTitleIexact?: string, status?: TasksMyListStatusEnum, titleIcontains?: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<Task>>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.tasksMyList(assignedTo, assignedToLastNameIcontains, assignedToUsernameIexact, createdByLastNameIcontains, createdByUsername, deadlineGte, deadlineLte, descriptionIcontains, obligation, obligationResponsibilityTypeTitleIexact, status, titleIcontains, options);
+        async tasksMyList(assignedTo?: number, assignedToLastNameIcontains?: string, assignedToUsernameIexact?: string, createdBy?: number, createdByLastNameIcontains?: string, createdByUsername?: string, deadlineGte?: string, deadlineLte?: string, descriptionIcontains?: string, obligation?: number, obligationResponsibilityTypeTitleIexact?: string, status?: TasksMyListStatusEnum, titleIcontains?: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<Task>>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.tasksMyList(assignedTo, assignedToLastNameIcontains, assignedToUsernameIexact, createdBy, createdByLastNameIcontains, createdByUsername, deadlineGte, deadlineLte, descriptionIcontains, obligation, obligationResponsibilityTypeTitleIexact, status, titleIcontains, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['TasksApi.tasksMyList']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
@@ -4312,6 +4424,7 @@ export const TasksApiFactory = function (configuration?: Configuration, basePath
          * @param {number} [assignedTo] 
          * @param {string} [assignedToLastNameIcontains] 
          * @param {string} [assignedToUsernameIexact] 
+         * @param {number} [createdBy] 
          * @param {string} [createdByLastNameIcontains] 
          * @param {string} [createdByUsername] 
          * @param {string} [deadlineGte] 
@@ -4324,8 +4437,8 @@ export const TasksApiFactory = function (configuration?: Configuration, basePath
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        tasksCompletedList(assignedTo?: number, assignedToLastNameIcontains?: string, assignedToUsernameIexact?: string, createdByLastNameIcontains?: string, createdByUsername?: string, deadlineGte?: string, deadlineLte?: string, descriptionIcontains?: string, obligation?: number, obligationResponsibilityTypeTitleIexact?: string, status?: TasksCompletedListStatusEnum, titleIcontains?: string, options?: RawAxiosRequestConfig): AxiosPromise<Array<Task>> {
-            return localVarFp.tasksCompletedList(assignedTo, assignedToLastNameIcontains, assignedToUsernameIexact, createdByLastNameIcontains, createdByUsername, deadlineGte, deadlineLte, descriptionIcontains, obligation, obligationResponsibilityTypeTitleIexact, status, titleIcontains, options).then((request) => request(axios, basePath));
+        tasksCompletedList(assignedTo?: number, assignedToLastNameIcontains?: string, assignedToUsernameIexact?: string, createdBy?: number, createdByLastNameIcontains?: string, createdByUsername?: string, deadlineGte?: string, deadlineLte?: string, descriptionIcontains?: string, obligation?: number, obligationResponsibilityTypeTitleIexact?: string, status?: TasksCompletedListStatusEnum, titleIcontains?: string, options?: RawAxiosRequestConfig): AxiosPromise<Array<Task>> {
+            return localVarFp.tasksCompletedList(assignedTo, assignedToLastNameIcontains, assignedToUsernameIexact, createdBy, createdByLastNameIcontains, createdByUsername, deadlineGte, deadlineLte, descriptionIcontains, obligation, obligationResponsibilityTypeTitleIexact, status, titleIcontains, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -4350,6 +4463,7 @@ export const TasksApiFactory = function (configuration?: Configuration, basePath
          * @param {number} [assignedTo] 
          * @param {string} [assignedToLastNameIcontains] 
          * @param {string} [assignedToUsernameIexact] 
+         * @param {number} [createdBy] 
          * @param {string} [createdByLastNameIcontains] 
          * @param {string} [createdByUsername] 
          * @param {string} [deadlineGte] 
@@ -4362,14 +4476,15 @@ export const TasksApiFactory = function (configuration?: Configuration, basePath
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        tasksList(assignedTo?: number, assignedToLastNameIcontains?: string, assignedToUsernameIexact?: string, createdByLastNameIcontains?: string, createdByUsername?: string, deadlineGte?: string, deadlineLte?: string, descriptionIcontains?: string, obligation?: number, obligationResponsibilityTypeTitleIexact?: string, status?: TasksListStatusEnum, titleIcontains?: string, options?: RawAxiosRequestConfig): AxiosPromise<Array<Task>> {
-            return localVarFp.tasksList(assignedTo, assignedToLastNameIcontains, assignedToUsernameIexact, createdByLastNameIcontains, createdByUsername, deadlineGte, deadlineLte, descriptionIcontains, obligation, obligationResponsibilityTypeTitleIexact, status, titleIcontains, options).then((request) => request(axios, basePath));
+        tasksList(assignedTo?: number, assignedToLastNameIcontains?: string, assignedToUsernameIexact?: string, createdBy?: number, createdByLastNameIcontains?: string, createdByUsername?: string, deadlineGte?: string, deadlineLte?: string, descriptionIcontains?: string, obligation?: number, obligationResponsibilityTypeTitleIexact?: string, status?: TasksListStatusEnum, titleIcontains?: string, options?: RawAxiosRequestConfig): AxiosPromise<Array<Task>> {
+            return localVarFp.tasksList(assignedTo, assignedToLastNameIcontains, assignedToUsernameIexact, createdBy, createdByLastNameIcontains, createdByUsername, deadlineGte, deadlineLte, descriptionIcontains, obligation, obligationResponsibilityTypeTitleIexact, status, titleIcontains, options).then((request) => request(axios, basePath));
         },
         /**
          * 
          * @param {number} [assignedTo] 
          * @param {string} [assignedToLastNameIcontains] 
          * @param {string} [assignedToUsernameIexact] 
+         * @param {number} [createdBy] 
          * @param {string} [createdByLastNameIcontains] 
          * @param {string} [createdByUsername] 
          * @param {string} [deadlineGte] 
@@ -4382,14 +4497,15 @@ export const TasksApiFactory = function (configuration?: Configuration, basePath
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        tasksMyCompletedList(assignedTo?: number, assignedToLastNameIcontains?: string, assignedToUsernameIexact?: string, createdByLastNameIcontains?: string, createdByUsername?: string, deadlineGte?: string, deadlineLte?: string, descriptionIcontains?: string, obligation?: number, obligationResponsibilityTypeTitleIexact?: string, status?: TasksMyCompletedListStatusEnum, titleIcontains?: string, options?: RawAxiosRequestConfig): AxiosPromise<Array<Task>> {
-            return localVarFp.tasksMyCompletedList(assignedTo, assignedToLastNameIcontains, assignedToUsernameIexact, createdByLastNameIcontains, createdByUsername, deadlineGte, deadlineLte, descriptionIcontains, obligation, obligationResponsibilityTypeTitleIexact, status, titleIcontains, options).then((request) => request(axios, basePath));
+        tasksMyCompletedList(assignedTo?: number, assignedToLastNameIcontains?: string, assignedToUsernameIexact?: string, createdBy?: number, createdByLastNameIcontains?: string, createdByUsername?: string, deadlineGte?: string, deadlineLte?: string, descriptionIcontains?: string, obligation?: number, obligationResponsibilityTypeTitleIexact?: string, status?: TasksMyCompletedListStatusEnum, titleIcontains?: string, options?: RawAxiosRequestConfig): AxiosPromise<Array<Task>> {
+            return localVarFp.tasksMyCompletedList(assignedTo, assignedToLastNameIcontains, assignedToUsernameIexact, createdBy, createdByLastNameIcontains, createdByUsername, deadlineGte, deadlineLte, descriptionIcontains, obligation, obligationResponsibilityTypeTitleIexact, status, titleIcontains, options).then((request) => request(axios, basePath));
         },
         /**
          * 
          * @param {number} [assignedTo] 
          * @param {string} [assignedToLastNameIcontains] 
          * @param {string} [assignedToUsernameIexact] 
+         * @param {number} [createdBy] 
          * @param {string} [createdByLastNameIcontains] 
          * @param {string} [createdByUsername] 
          * @param {string} [deadlineGte] 
@@ -4402,8 +4518,8 @@ export const TasksApiFactory = function (configuration?: Configuration, basePath
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        tasksMyList(assignedTo?: number, assignedToLastNameIcontains?: string, assignedToUsernameIexact?: string, createdByLastNameIcontains?: string, createdByUsername?: string, deadlineGte?: string, deadlineLte?: string, descriptionIcontains?: string, obligation?: number, obligationResponsibilityTypeTitleIexact?: string, status?: TasksMyListStatusEnum, titleIcontains?: string, options?: RawAxiosRequestConfig): AxiosPromise<Array<Task>> {
-            return localVarFp.tasksMyList(assignedTo, assignedToLastNameIcontains, assignedToUsernameIexact, createdByLastNameIcontains, createdByUsername, deadlineGte, deadlineLte, descriptionIcontains, obligation, obligationResponsibilityTypeTitleIexact, status, titleIcontains, options).then((request) => request(axios, basePath));
+        tasksMyList(assignedTo?: number, assignedToLastNameIcontains?: string, assignedToUsernameIexact?: string, createdBy?: number, createdByLastNameIcontains?: string, createdByUsername?: string, deadlineGte?: string, deadlineLte?: string, descriptionIcontains?: string, obligation?: number, obligationResponsibilityTypeTitleIexact?: string, status?: TasksMyListStatusEnum, titleIcontains?: string, options?: RawAxiosRequestConfig): AxiosPromise<Array<Task>> {
+            return localVarFp.tasksMyList(assignedTo, assignedToLastNameIcontains, assignedToUsernameIexact, createdBy, createdByLastNameIcontains, createdByUsername, deadlineGte, deadlineLte, descriptionIcontains, obligation, obligationResponsibilityTypeTitleIexact, status, titleIcontains, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -4506,6 +4622,7 @@ export class TasksApi extends BaseAPI {
      * @param {number} [assignedTo] 
      * @param {string} [assignedToLastNameIcontains] 
      * @param {string} [assignedToUsernameIexact] 
+     * @param {number} [createdBy] 
      * @param {string} [createdByLastNameIcontains] 
      * @param {string} [createdByUsername] 
      * @param {string} [deadlineGte] 
@@ -4519,8 +4636,8 @@ export class TasksApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof TasksApi
      */
-    public tasksCompletedList(assignedTo?: number, assignedToLastNameIcontains?: string, assignedToUsernameIexact?: string, createdByLastNameIcontains?: string, createdByUsername?: string, deadlineGte?: string, deadlineLte?: string, descriptionIcontains?: string, obligation?: number, obligationResponsibilityTypeTitleIexact?: string, status?: TasksCompletedListStatusEnum, titleIcontains?: string, options?: RawAxiosRequestConfig) {
-        return TasksApiFp(this.configuration).tasksCompletedList(assignedTo, assignedToLastNameIcontains, assignedToUsernameIexact, createdByLastNameIcontains, createdByUsername, deadlineGte, deadlineLte, descriptionIcontains, obligation, obligationResponsibilityTypeTitleIexact, status, titleIcontains, options).then((request) => request(this.axios, this.basePath));
+    public tasksCompletedList(assignedTo?: number, assignedToLastNameIcontains?: string, assignedToUsernameIexact?: string, createdBy?: number, createdByLastNameIcontains?: string, createdByUsername?: string, deadlineGte?: string, deadlineLte?: string, descriptionIcontains?: string, obligation?: number, obligationResponsibilityTypeTitleIexact?: string, status?: TasksCompletedListStatusEnum, titleIcontains?: string, options?: RawAxiosRequestConfig) {
+        return TasksApiFp(this.configuration).tasksCompletedList(assignedTo, assignedToLastNameIcontains, assignedToUsernameIexact, createdBy, createdByLastNameIcontains, createdByUsername, deadlineGte, deadlineLte, descriptionIcontains, obligation, obligationResponsibilityTypeTitleIexact, status, titleIcontains, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -4550,6 +4667,7 @@ export class TasksApi extends BaseAPI {
      * @param {number} [assignedTo] 
      * @param {string} [assignedToLastNameIcontains] 
      * @param {string} [assignedToUsernameIexact] 
+     * @param {number} [createdBy] 
      * @param {string} [createdByLastNameIcontains] 
      * @param {string} [createdByUsername] 
      * @param {string} [deadlineGte] 
@@ -4563,8 +4681,8 @@ export class TasksApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof TasksApi
      */
-    public tasksList(assignedTo?: number, assignedToLastNameIcontains?: string, assignedToUsernameIexact?: string, createdByLastNameIcontains?: string, createdByUsername?: string, deadlineGte?: string, deadlineLte?: string, descriptionIcontains?: string, obligation?: number, obligationResponsibilityTypeTitleIexact?: string, status?: TasksListStatusEnum, titleIcontains?: string, options?: RawAxiosRequestConfig) {
-        return TasksApiFp(this.configuration).tasksList(assignedTo, assignedToLastNameIcontains, assignedToUsernameIexact, createdByLastNameIcontains, createdByUsername, deadlineGte, deadlineLte, descriptionIcontains, obligation, obligationResponsibilityTypeTitleIexact, status, titleIcontains, options).then((request) => request(this.axios, this.basePath));
+    public tasksList(assignedTo?: number, assignedToLastNameIcontains?: string, assignedToUsernameIexact?: string, createdBy?: number, createdByLastNameIcontains?: string, createdByUsername?: string, deadlineGte?: string, deadlineLte?: string, descriptionIcontains?: string, obligation?: number, obligationResponsibilityTypeTitleIexact?: string, status?: TasksListStatusEnum, titleIcontains?: string, options?: RawAxiosRequestConfig) {
+        return TasksApiFp(this.configuration).tasksList(assignedTo, assignedToLastNameIcontains, assignedToUsernameIexact, createdBy, createdByLastNameIcontains, createdByUsername, deadlineGte, deadlineLte, descriptionIcontains, obligation, obligationResponsibilityTypeTitleIexact, status, titleIcontains, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -4572,6 +4690,7 @@ export class TasksApi extends BaseAPI {
      * @param {number} [assignedTo] 
      * @param {string} [assignedToLastNameIcontains] 
      * @param {string} [assignedToUsernameIexact] 
+     * @param {number} [createdBy] 
      * @param {string} [createdByLastNameIcontains] 
      * @param {string} [createdByUsername] 
      * @param {string} [deadlineGte] 
@@ -4585,8 +4704,8 @@ export class TasksApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof TasksApi
      */
-    public tasksMyCompletedList(assignedTo?: number, assignedToLastNameIcontains?: string, assignedToUsernameIexact?: string, createdByLastNameIcontains?: string, createdByUsername?: string, deadlineGte?: string, deadlineLte?: string, descriptionIcontains?: string, obligation?: number, obligationResponsibilityTypeTitleIexact?: string, status?: TasksMyCompletedListStatusEnum, titleIcontains?: string, options?: RawAxiosRequestConfig) {
-        return TasksApiFp(this.configuration).tasksMyCompletedList(assignedTo, assignedToLastNameIcontains, assignedToUsernameIexact, createdByLastNameIcontains, createdByUsername, deadlineGte, deadlineLte, descriptionIcontains, obligation, obligationResponsibilityTypeTitleIexact, status, titleIcontains, options).then((request) => request(this.axios, this.basePath));
+    public tasksMyCompletedList(assignedTo?: number, assignedToLastNameIcontains?: string, assignedToUsernameIexact?: string, createdBy?: number, createdByLastNameIcontains?: string, createdByUsername?: string, deadlineGte?: string, deadlineLte?: string, descriptionIcontains?: string, obligation?: number, obligationResponsibilityTypeTitleIexact?: string, status?: TasksMyCompletedListStatusEnum, titleIcontains?: string, options?: RawAxiosRequestConfig) {
+        return TasksApiFp(this.configuration).tasksMyCompletedList(assignedTo, assignedToLastNameIcontains, assignedToUsernameIexact, createdBy, createdByLastNameIcontains, createdByUsername, deadlineGte, deadlineLte, descriptionIcontains, obligation, obligationResponsibilityTypeTitleIexact, status, titleIcontains, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -4594,6 +4713,7 @@ export class TasksApi extends BaseAPI {
      * @param {number} [assignedTo] 
      * @param {string} [assignedToLastNameIcontains] 
      * @param {string} [assignedToUsernameIexact] 
+     * @param {number} [createdBy] 
      * @param {string} [createdByLastNameIcontains] 
      * @param {string} [createdByUsername] 
      * @param {string} [deadlineGte] 
@@ -4607,8 +4727,8 @@ export class TasksApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof TasksApi
      */
-    public tasksMyList(assignedTo?: number, assignedToLastNameIcontains?: string, assignedToUsernameIexact?: string, createdByLastNameIcontains?: string, createdByUsername?: string, deadlineGte?: string, deadlineLte?: string, descriptionIcontains?: string, obligation?: number, obligationResponsibilityTypeTitleIexact?: string, status?: TasksMyListStatusEnum, titleIcontains?: string, options?: RawAxiosRequestConfig) {
-        return TasksApiFp(this.configuration).tasksMyList(assignedTo, assignedToLastNameIcontains, assignedToUsernameIexact, createdByLastNameIcontains, createdByUsername, deadlineGte, deadlineLte, descriptionIcontains, obligation, obligationResponsibilityTypeTitleIexact, status, titleIcontains, options).then((request) => request(this.axios, this.basePath));
+    public tasksMyList(assignedTo?: number, assignedToLastNameIcontains?: string, assignedToUsernameIexact?: string, createdBy?: number, createdByLastNameIcontains?: string, createdByUsername?: string, deadlineGte?: string, deadlineLte?: string, descriptionIcontains?: string, obligation?: number, obligationResponsibilityTypeTitleIexact?: string, status?: TasksMyListStatusEnum, titleIcontains?: string, options?: RawAxiosRequestConfig) {
+        return TasksApiFp(this.configuration).tasksMyList(assignedTo, assignedToLastNameIcontains, assignedToUsernameIexact, createdBy, createdByLastNameIcontains, createdByUsername, deadlineGte, deadlineLte, descriptionIcontains, obligation, obligationResponsibilityTypeTitleIexact, status, titleIcontains, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**

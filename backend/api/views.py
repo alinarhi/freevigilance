@@ -1,6 +1,5 @@
 from django.shortcuts import get_object_or_404
 from rest_framework import viewsets, generics, status
-
 from .filters import *
 from .models import *
 from .serializers import *
@@ -9,7 +8,7 @@ from .services import create_recurring_task_iteration
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.response import Response
 from rest_framework.decorators import action
-from drf_spectacular.utils import extend_schema
+from drf_spectacular.utils import extend_schema, OpenApiParameter
 from auditlog.models import LogEntry
 from auditlog.context import disable_auditlog
 from auditlog.diff import model_instance_diff
@@ -78,7 +77,10 @@ class TaskViewSet(viewsets.ModelViewSet):
     @extend_schema(responses=TaskSerializer(many=True))
     @action(detail=False)
     def completed(self, request):
-        queryset = self.get_queryset().filter(status=Task.COMPLETED)
+        queryset = self.filter_queryset(
+            self.get_queryset()
+            .filter(status=Task.COMPLETED)
+        )
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
 
@@ -86,7 +88,7 @@ class TaskViewSet(viewsets.ModelViewSet):
     @action(detail=False)
     def my(self, request):
         user = request.user
-        queryset = (
+        queryset = self.filter_queryset(
             self.get_queryset()
             .filter(assigned_to=user)
             .exclude(status=Task.COMPLETED)
@@ -98,7 +100,7 @@ class TaskViewSet(viewsets.ModelViewSet):
     @action(detail=False, url_path='my/completed')
     def my_completed(self, request):
         user = request.user
-        queryset = (
+        queryset = self.filter_queryset(
             self.get_queryset()
             .filter(assigned_to=user, status=Task.COMPLETED)
         )
@@ -148,6 +150,7 @@ class ObligationViewSet(viewsets.ModelViewSet):
 @extend_schema(tags=['tasks'])
 class ObligationTaskListView(generics.ListAPIView):
     serializer_class = TaskSerializer
+    filterset_class = TaskFilter
 
     def get_queryset(self):
         obligation_id = self.kwargs['id']
@@ -178,6 +181,7 @@ class PVAViewSet(viewsets.ModelViewSet):
 @extend_schema(tags=['obligations'])
 class PVAObligationListView(generics.ListAPIView):
     serializer_class = ObligationSerializer
+    filterset_class = ObligationFilter
 
     def get_queryset(self):
         pva_id = self.kwargs['id']
@@ -210,6 +214,7 @@ class AuditlogListView(generics.ListAPIView):
 
 class TaskChangelogListView(generics.ListAPIView):
     serializer_class = LogEntrySerializer
+    filterset_class = LogEntryFilter
 
     def get_queryset(self):
         task = get_object_or_404(Task, id=self.kwargs['id'])
