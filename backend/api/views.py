@@ -120,20 +120,21 @@ class TaskViewSet(viewsets.ModelViewSet):
             print(new_status)
             if new_status == Task.COMPLETED:
                 task.completion_evidence_link = status_serializer.validated_data.get('completion_evidence_link', '')
-                if task.is_recurring and task.deadline < task.schedule.end_date:
-                    with disable_auditlog():
-                        new_task = create_recurring_task_iteration(task)
-                        new_task.save()
-                    LogEntry.objects.log_create(new_task,
-                                                actor=request.user,
-                                                action=LogEntry.Action.CREATE,
-                                                changes = model_instance_diff(None, new_task),
-                                                changes_text=f'Автоматически создана новая итерация повторяющейся задачи. ID предыдущей итерации: {task.id}.')
-                    task_serializer = self.get_serializer(new_task)
-                    task.status = new_status
-                    task.assigned_to = request.user
-                    task.save()
-                    return Response(task_serializer.data, status=status.HTTP_201_CREATED)
+                if task.is_recurring:
+                    new_task = create_recurring_task_iteration(task)
+                    if new_task.deadline.date() <= task.schedule.end_date: 
+                        with disable_auditlog():
+                            new_task.save()
+                        LogEntry.objects.log_create(new_task,
+                                                    actor=request.user,
+                                                    action=LogEntry.Action.CREATE,
+                                                    changes = model_instance_diff(None, new_task),
+                                                    changes_text=f'Автоматически создана новая итерация повторяющейся задачи. ID предыдущей итерации: {task.id}.')
+                        task_serializer = self.get_serializer(new_task)
+                        task.status = new_status
+                        task.assigned_to = request.user
+                        task.save()
+                        return Response(task_serializer.data, status=status.HTTP_201_CREATED)
             task.status = new_status
             task.assigned_to = request.user
             task.save()
