@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import { TaskStatusEnum, type Task, type TaskStatus } from '@/api-client';
 import { FrequencyTypeDisplay } from '@/utils/constants';
-import { PencilIcon, PlayIcon, CheckIcon, XMarkIcon } from '@heroicons/vue/24/solid';
-import { ref } from 'vue';
+import ButtonEdit from '@/components/ButtonEdit.vue';
+import { PlayIcon, XMarkIcon } from '@heroicons/vue/24/solid';
+import { computed, ref } from 'vue';
 
-const completion_evidence = ref('')
+const completionEvidence = ref('')
 
 const props = defineProps<{
   task: Task,
@@ -13,6 +14,7 @@ const props = defineProps<{
   showChangeStatusButton: boolean
 }>()
 
+const deadlineDate = computed(() => new Date(props.task.deadline))
 defineEmits<{
   (e: 'close'): void
   (e: 'edit'): void
@@ -23,43 +25,42 @@ defineEmits<{
 </script>
 
 <template>
-  <div class="flex flex-col h-full overflow-hidden wrap-anywhere bg-white p-4 text-lg">
-    <div class="relative">
-      <div class="absolute top-0 right-0 flex gap-2">
-        <button v-if="showEditButton" @click="$emit('edit')" title="Редактировать"
-          class="cursor-pointer p-3 font-bold bg-teal-600 rounded-lg shadow-md hover:bg-teal-700">
-          <PencilIcon class="size-5 text-white" />
-        </button>
-        <button v-if="showDetailsButton" @click="$emit('close')" title="Закрыть"
-          class="cursor-pointer py-1 px-2 rounded-lg hover:bg-gray-100">
-          <XMarkIcon class="size-7 text-gray-700" />
-        </button>
-      </div>
-
+  <div class="flex flex-col justify-stretch h-full overflow-hidden wrap-anywhere bg-white p-4 text-lg">
+    <div class="flex-none">
       <!-- Header -->
-      <div class="text-sm text-gray-600">
-        <p> Договор: {{ task.pva_display }}</p>
-        <p> Обязательство: {{ task.obligation_display }} </p>
-        <p> Тип обязательства: {{ task.responsibility_type_display }} </p>
-        <hr class="text-gray-300 mt-2 mb-4">
+      <div class="flex justify-between items-start">
+        <div class="text-sm text-gray-600">
+          <p> <span class="font-semibold">Договор: </span>{{ task.pva_display }}</p>
+          <p><span class="font-semibold">Обязательство: </span>{{ task.obligation_display }} </p>
+          <p><span class="font-semibold"> Тип обязательства: </span>{{ task.responsibility_type_display }} </p>
+        </div>
+
+        <div class="flex gap-2">
+          <ButtonEdit v-if="showEditButton" @click="$emit('edit')"/>
+          <button v-if="showDetailsButton" @click="$emit('close')" title="Закрыть"
+            class="cursor-pointer py-1 px-2 rounded-lg hover:bg-gray-100">
+            <XMarkIcon class="size-7 text-gray-700" />
+          </button>
+        </div>
       </div>
+      <hr class="text-gray-300 mt-2 mb-4">
+
+      <!-- Task Title -->
+      <div class="text-2xl font-bold"> {{ task.title }}</div>
+      <div :class="deadlineDate >= new Date() ? 'text-teal-700' : 'text-red-700'" class="font-semibold"><span>До
+        </span>{{ deadlineDate.toLocaleString('ru-RU') }}</div>
 
       <!-- Task Info -->
-      <div class="text-2xl font-bold"> {{ task.title }}</div>
-      <div class="font-semibold text-teal-700">До: {{ new Date(task.deadline).toLocaleString('ru-RU') }}</div>
-
-      <br>
-      <div class="text-sm">
+      <div :class="showDetailsButton ? 'text-sm' : 'text-base'" class="mt-4 mb-4">
         <p class="text-gray-600"> ID: {{ task.id }}</p>
-        <p> Статус: {{ task.status_display }}</p>
-        <p v v-if="task.status === TaskStatusEnum.Completed"> Подтверждение выполнения: {{ task.completion_evidence_link
-          }}</p>
-        <p v-if="task.is_recurring && task.schedule?.frequency_type"> Повтор: {{
-          FrequencyTypeDisplay[task.schedule.frequency_type] }}</p>
-        <p> Исполнитель: {{ task.assigned_to_display ?? 'Не назначен' }} </p>
-        <p> Создана: {{ task.created_by_display }} </p>
-        <br>
-
+        <p><span class="font-semibold">Статус: </span>{{ task.status_display }}</p>
+        <p v v-if="task.status === TaskStatusEnum.Completed" class="truncate"><span class="font-semibold">Подтверждение выполнения:
+          </span> <a :href="task.completion_evidence_link">{{ task.completion_evidence_link
+          }}</a></p>
+        <p v-if="task.is_recurring && task.schedule?.frequency_type"><span class="font-semibold">Повтор: </span>{{
+          FrequencyTypeDisplay[task.schedule.frequency_type] }} до {{ new Date(task.schedule.end_date).toLocaleDateString('ru-RU') }}</p>
+        <p><span class="font-semibold">Исполнитель: </span>{{ task.assigned_to_display ?? 'Не назначен' }} </p>
+        <p><span class="font-semibold">Создана: </span> {{ task.created_by_display }} </p>
       </div>
     </div>
 
@@ -75,15 +76,15 @@ defineEmits<{
       </div>
     </div>
 
-    <hr class="text-gray-300 mt-20 mb-4">
+    <hr class="text-gray-300 mt-4 mb-4">
 
-    <!-- Buttons -->
-    <div class="flex flex-col gap-8">
+    <!--Status & Details Buttons -->
+    <div class="flex-none flex flex-col wrap-normal gap-8">
       <form v-if="showChangeStatusButton && task.status === TaskStatusEnum.InProgress"
-        @submit.prevent="$emit('changeStatus', { status: TaskStatusEnum.Completed, completion_evidence_link: completion_evidence })"
+        @submit.prevent="$emit('changeStatus', { status: TaskStatusEnum.Completed, completion_evidence_link: completionEvidence })"
         class="flex flex-nowrap gap-2">
-        <input v-model.trim="completion_evidence" type="text" placeholder="Подтверждение выполнения (ссылка)"
-          class="flex-1 input rounded-lg border border-gray-300 p-2 bg-gray-50" required></input>
+        <input v-model.trim="completionEvidence" type="text" placeholder="Подтверждение выполнения (ссылка)"
+          class="flex-1 input text-base rounded-lg border border-gray-300 p-2 bg-gray-50" required></input>
         <button type="submit"
           class="inline-flex items-center gap-2 cursor-pointer px-4 py-2 text-white font-semibold bg-teal-600 hover:bg-teal-700 rounded-lg shadow-md">
           Завершить
@@ -105,3 +106,11 @@ defineEmits<{
     </div>
   </div>
 </template>
+
+<style scoped>
+@reference "tailwindcss";
+
+a {
+    @apply text-teal-600 hover:text-teal-700 underline;
+}
+</style>

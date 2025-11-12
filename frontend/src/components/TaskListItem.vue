@@ -16,6 +16,7 @@ const props = defineProps<{
       <div class="w-1/5 flex-initial">{{ task.status_display }}</div>
     </div>
 
-    <div class="max-w-lg truncate text-gray-700">{{ task.description }}</div>
+    <div v-if="task.description?.length" class="max-w-lg truncate text-gray-700">{{ task.description }}</div>
+    <div v-else><br></div>
   </div>
 </template>

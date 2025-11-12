@@ -27,6 +27,7 @@
     transform: translate(-50%, -50%);
     max-height: 80%;
     min-width: min-content;
+    min-height: min-content;
     width: 40%;
 }
 </style>

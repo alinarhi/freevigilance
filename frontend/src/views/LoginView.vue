@@ -18,7 +18,6 @@ const onLogin = async () => {
   if (usernameEmpty.value || passwordEmpty.value) return
   try {
     await userStore.login(username.value, password.value)
-    // router.push('/')
     router.push({ name: 'tasks' })
   } catch (error) {
     if (isAxiosError(error)) {
@@ -31,14 +30,14 @@ const onLogin = async () => {
 </script>
 
 <template>
-  <div class="flex justify-center items-center min-h-screen bg-gray-100">
-    <form @submit.prevent="onLogin" class="p-6 bg-white shadow-md rounded-lg w-full max-w-sm">
-      <h1 class="text-xl font-semibold mb-4">Вход</h1>
-      <input v-model="username" placeholder="Имя пользователя" class="input mb-2" />
+  <div class="flex justify-center items-center min-h-full bg-gray-100">
+    <form @submit.prevent="onLogin" class="p-6 bg-white shadow-md rounded-lg w-sm">
+      <h1 class="text-xl font-semibold">Вход</h1>
+      <input v-model="username" placeholder="Имя пользователя" class="input w-full mt-4 p-2" />
       <p v-if="usernameEmpty" class="text-red-500 text-sm mt-1">Введите имя пользователя</p>
-      <input v-model="password" type="password" placeholder="Пароль" class="input mb-4" />
+      <input v-model="password" type="password" placeholder="Пароль" class="input w-full mt-4 p-2" />
       <p v-if="passwordEmpty" class="text-red-500 text-sm mt-1">Введите пароль</p>
-      <button type="submit" class="btn w-full">Войти</button>
+      <button type="submit" class="cursor-pointer w-full mt-2 text-teal-700 font-semibold">Войти</button>
     </form>
   </div>
 </template>
