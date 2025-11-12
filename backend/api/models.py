@@ -91,6 +91,9 @@ class TaskSchedule(models.Model):
     start_date = models.DateField()
     end_date = models.DateField()
     
+    def __str__(self) -> str:
+        return f"{self._meta.verbose_name} #{self.pk}"
+    
     class Meta:
         verbose_name = "Расписание"
         verbose_name_plural = "Расписания"

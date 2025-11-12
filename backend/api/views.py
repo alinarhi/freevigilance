@@ -120,7 +120,7 @@ class TaskViewSet(viewsets.ModelViewSet):
             print(new_status)
             if new_status == Task.COMPLETED:
                 task.completion_evidence_link = status_serializer.validated_data.get('completion_evidence_link', '')
-                if task.is_recurring:
+                if task.is_recurring and task.deadline < task.schedule.end_date:
                     with disable_auditlog():
                         new_task = create_recurring_task_iteration(task)
                         new_task.save()
@@ -162,7 +162,7 @@ class ObligationTaskListView(generics.ListAPIView):
                 'obligation',
                 'obligation__pva',
                 'obligation__responsibility_type'
-            ).order_by('-deadline')
+            ).order_by('deadline')
 
 class ResponsibilityTypeViewSet(viewsets.ModelViewSet):
     queryset = ResponsibilityType.objects.all()
@@ -171,6 +171,9 @@ class ResponsibilityTypeViewSet(viewsets.ModelViewSet):
 class MedicinalProductViewSet(viewsets.ModelViewSet):
     queryset = MedicinalProduct.objects.all()
     serializer_class = MedicinalProductSerializer
+    
+    def get_queryset(self):
+        return super().get_queryset().order_by('title')
 
 
 class PVAViewSet(viewsets.ModelViewSet):

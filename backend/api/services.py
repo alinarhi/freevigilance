@@ -4,7 +4,6 @@ from datetime import datetime, timedelta
 import calendar
 
 def create_recurring_task_iteration(task: Task):
-    #TODO: specify days?
     new_task = copy.copy(task)
     new_task.id = None
     new_task.status = Task.NOT_STARTED
