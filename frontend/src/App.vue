@@ -28,9 +28,9 @@ const onLogout = () => {
 
     <div class="flex-1 flex overflow-hidden">
     <!-- Sidebar  -->
-    <aside v-if="showSidebar" class="w-64 overflow-y-auto flex-none text-white p-4 bg-teal-700/70">
+    <aside v-if="showSidebar" class="hidden lg:block w-1/7 min-w-max shrink overflow-y-auto flex-none text-white p-4 bg-teal-700/70">
       <!-- User Info -->
-      <div v-if="userStore.user" class="flex flex-col items-center mt-6 mb-6">
+      <div v-if="userStore.user" class="flex flex-col items-center text-center mt-6 mb-6">
         <UserIcon class="size-14 mb-2"/>
         <h2 class="font-bold text-lg">{{ userStore.user.first_name + ' ' + userStore.user.last_name }}</h2>
         <p class="text-gray-200 italic">{{ userStore.user.email }}</p>
