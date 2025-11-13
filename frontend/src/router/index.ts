@@ -6,6 +6,7 @@ import PVAsView from '@/views/PVAsView.vue';
 import PVAObligationsView from '@/views/PVAObligationsView.vue';
 import AuditlogView from '@/views/AuditlogView.vue';
 import TaskView from '@/views/TaskView.vue';
+import ObligationTasksView from '@/views/ObligationTasksView.vue';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -21,24 +22,35 @@ const router = createRouter({
       meta: {
         requiresAuth: true
       }
-    },{
+    },
+    {
       path: '/tasks/:id',
       name: 'task',
       component: TaskView,
       meta: {
         requiresAuth: true
       }
-    },{
+    },
+    {
       path: '/pvas',
       name: 'pvas',
       component: PVAsView,
       meta: {
         requiresAuth: true
       }
-    },{
+    },
+    {
       path: '/pvas/:id',
       name: 'pva',
       component: PVAObligationsView,
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
+      path: '/obligations/:id',
+      name: 'obligation',
+      component: ObligationTasksView,
       meta: {
         requiresAuth: true
       }

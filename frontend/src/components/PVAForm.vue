@@ -7,20 +7,18 @@ import apiAxios from '@/axios'
 import { isAxiosError } from 'axios'
 import { handleAxiosError } from '@/utils/utils'
 
-export type FormMode = 'create' | 'edit' | 'readonly'
+export type FormMode = 'create' | 'edit'
 const medsApi = new MedicinalProductsApi(undefined, undefined, apiAxios)
 
 const props = defineProps<{
   mode: FormMode
-  pva?: PVA | null
+  pva?: PVA | undefined
 }>()
 
 const emit = defineEmits<{
   (e: 'submit', data: PVA): void
   (e: 'close'): void
 }>()
-
-const isReadonly = computed(() => props.mode === 'readonly')
 
 const form = ref<PVA>({
   requisites: '',
@@ -51,30 +49,39 @@ const medsList = computed(() => {
 })
 
 const handleSubmit = () => {
-  console.log(form.value)
-  emit('submit', form.value)
+  if (form.value.start_date === "") {
+    form.value.start_date = null
+  }
+  if (form.value.end_date === "") {
+    form.value.end_date = null
+  }
+  if (form.value.start_date && form.value.end_date && new Date(form.value.start_date) >= new Date(form.value.end_date)) {
+    alert('Выбран некорректный интервал дат')
+
+  } else {
+    emit('submit', form.value)
+  }
 }
 
-onMounted(() => {
+onMounted(async () => {
   if (props.pva) {
     form.value = {
       ...props.pva,
     }
   }
-  if (props.mode !== 'readonly') {
-    fetchMeds()
-  }
+  await fetchMeds()
 })
 </script>
 
 <template>
-  <form @submit.prevent="handleSubmit"
-    class="max-h-100% min-h-100% mx-auto p-6 bg-white rounded-2xl shadow-md space-y-6">
-
+  <form @submit.prevent="handleSubmit" class="h-full p-6 bg-white rounded-2xl shadow-md space-y-6">
     <div>
-      <label v-if="mode !== 'create'" class="block mb-1 font-semibold text-gray-700">Договор #{{ pva?.id }}</label>
+      <div class="flex-none text-xl mb-4 font-extrabold text-teal-900">{{ mode === 'create' ? 'Добавление' :
+        'Редактирование' }} договора
+      </div>
+
       <label class="block mb-1 font-semibold text-gray-700">Реквизиты</label>
-      <input v-model="form.requisites" :disabled="isReadonly" type="text"
+      <input v-model="form.requisites" type="text"
         class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring focus:ring-blue-300"
         required />
     </div>
@@ -86,7 +93,7 @@ onMounted(() => {
       <datalist id="medsList">
         <option v-for="med in meds" :key="med.id" :value="med.title" />
       </datalist> -->
-      <select v-model="form.medicinal_products" :disabled="isReadonly" multiple
+      <select v-model="form.medicinal_products" multiple
         class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring focus:ring-blue-300">
         <option v-for="med in meds" :key="med.id" :value="med.title">
           {{ med.title }}
@@ -96,7 +103,7 @@ onMounted(() => {
 
     <div>
       <label class="block mb-1 font-semibold text-gray-700">Статус</label>
-      <select v-model="form.status" :disabled="isReadonly"
+      <select v-model="form.status"
         class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring focus:ring-blue-300"
         required>
         <option v-for="status in Object.values(PVAStatusEnum)" :key="status" :value="status">
@@ -107,39 +114,37 @@ onMounted(() => {
 
     <div>
       <label class="block mb-1 font-semibold text-gray-700">Ссылка на основной контракт</label>
-      <input v-if="mode !== 'readonly'" v-model="form.main_contract_link" type="text"
+      <input v-model="form.main_contract_link" type="text"
         class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring focus:ring-blue-300" />
-      <a v-else :href="form.main_contract_link">{{ form.main_contract_link }}</a>
     </div>
 
     <div>
       <label class="block mb-1 font-semibold text-gray-700">Ссылка на контракт по фармакобезопасности</label>
-      <input v-if="mode !== 'readonly'" v-model="form.pva_link" :disabled="isReadonly" type="text"
+      <input v-model="form.pva_link" type="text"
         class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring focus:ring-blue-300" />
-      <a v-else :href="form.pva_link">{{ form.pva_link }}</a>
     </div>
 
 
     <div class="flex items-center gap-2">
       <label class="block mb-1 font-semibold text-gray-700">Сроки: с</label>
-      <input v-model="form.start_date" type="date" :disabled="isReadonly"
+      <input v-model="form.start_date" type="date"
         class="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring focus:ring-blue-300" />
       <label class="block mb-1 font-semibold text-gray-700">по</label>
-      <input v-model="form.end_date" type="date" :disabled="isReadonly"
+      <input v-model="form.end_date" type="date"
         class="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring focus:ring-blue-300" />
     </div>
 
 
     <div>
       <label class="block mb-1 font-semibold text-gray-700">Описание</label>
-      <textarea v-model="form.description" :disabled="isReadonly"
+      <textarea v-model="form.description"
         class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring focus:ring-blue-300"
         rows="3" />
     </div>
 
 
     <div class="flex gap-4 font-semibold">
-      <button type="submit" :hidden="isReadonly" 
+      <button type="submit"
         class="cursor-pointer px-6 py-2 bg-teal-600 text-white font-bold rounded-lg shadow-md hover:bg-teal-700">
         Сохранить
       </button>

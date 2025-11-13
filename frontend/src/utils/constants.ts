@@ -27,3 +27,13 @@ export const ActionDisplay: Record<ActionEnum, string> = {
   [ActionEnum.NUMBER_2]: "удалил(-а)",
   [ActionEnum.NUMBER_3]: "получил(-а) доступ к",
 };
+
+export const ContentTypeDisplay: Record<string, string> = {
+  ["task"]: "Задача",
+  ["pva"]: "Договор",
+  ["obligation"]: "Обязательство",
+  ["responsibilitytype"]: "Тип обязательства",
+  ["medicinalproduct"]: "Лекарственный препарат",
+  ["comment"]: "Комментарий",
+  ["taskschedule"]: "Расписание",
+}

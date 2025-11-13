@@ -132,8 +132,7 @@ onMounted(async () => {
                 </div>
 
                 <!-- Comments -->
-                <div
-                    class="flex h-auto max-h-3/10 flex-col overflow-hidden bg-white rounded-xl shadow-md p-4 space-y-2">
+                <div class="flex h-auto max-h-3/10 flex-col overflow-hidden bg-white rounded-xl shadow-md p-4 space-y-2 mb-1">
                     <h2 class="text-lg font-semibold">Комментарии</h2>
                     <ul ref="comments-list" class="flex-1 overflow-y-auto bg-white rounded-xl p-2 space-y-3">
                         <li v-for="comment in comments" :key="comment.id">
@@ -165,7 +164,7 @@ onMounted(async () => {
 
 
             <!-- Right Column: Changelog -->
-            <div class="w-2/5 flex flex-col overflow-hidden bg-white rounded-xl shadow-md p-4 wrap-anywhere">
+            <div class="w-2/5 flex flex-col overflow-hidden bg-white rounded-xl shadow-md p-4 wrap-anywhere mb-1">
                 <h2 class="text-lg font-semibold mb-2">История изменений</h2>
                 <ul class="flex-1 overflow-y-auto divide-y divide-gray-300">
                     <li v-for="log in changelog" :key="log.id" class="p-2 bg-gray-100 rounded-lg">

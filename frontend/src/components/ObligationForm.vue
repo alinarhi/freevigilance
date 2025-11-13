@@ -5,13 +5,13 @@ import apiAxios from '@/axios'
 import { isAxiosError } from 'axios'
 import { handleAxiosError } from '@/utils/utils'
 
-export type FormMode = 'create' | 'edit' | 'readonly'
+export type FormMode = 'create' | 'edit'
 const typesApi = new ResponsibilityTypesApi(undefined, undefined, apiAxios)
 
 const props = defineProps<{
   mode: FormMode
   pva_id: number
-  obligation?: Obligation | null
+  obligation?: Obligation
 }>()
 
 const emit = defineEmits<{
@@ -19,8 +19,6 @@ const emit = defineEmits<{
   (e: 'close'): void
 }>()
 
-const isReadonly = computed(() => props.mode === 'readonly')
-const typeInput = ref<string>('')
 const form = ref<Obligation>({
   title: '',
   description: '',
@@ -58,41 +56,43 @@ const postType = async (type: string) => {
 }
 
 const handleSubmit = async () => {
-  if (!types.value.map(type => type.title).includes(form.value.responsibility_type)) {
-    await postType(form.value.responsibility_type)
+  if (new Date(form.value.start_date) >= new Date(form.value.end_date)) {
+    alert('Выбран некорректный интервал дат')
+  } else {
+    if (form.value.responsibility_type && !types.value.map(type => type.title).includes(form.value.responsibility_type)) {
+      await postType(form.value.responsibility_type)
+    }
+    emit('submit', form.value)
   }
-  console.log(form.value)
-  emit('submit', form.value)
 }
 
-onMounted(() => {
+onMounted(async () => {
   if (props.obligation) {
     form.value = {
       ...props.obligation,
     }
   }
-  if (props.mode !== 'readonly') {
-    fetchTypes()
-  }
+  await fetchTypes()
 })
 </script>
 
 <template>
-  <form @submit.prevent="handleSubmit"
-    class="max-h-100% min-h-100% mx-auto p-6 bg-white rounded-2xl shadow-md space-y-6">
+  <form @submit.prevent="handleSubmit" class="h-full p-6 bg-white rounded-2xl shadow-md space-y-6">
+
+    <div class="flex-none text-xl mb-4 font-extrabold text-teal-900">{{ mode === 'create' ? 'Добавление' :
+      'Редактирование' }} обязательства </div>
 
     <div>
-      <label v-if="mode !== 'create'" class="block mb-1 font-semibold text-gray-700">Обязательство #{{obligation?.id }}</label>
       <label class="block mb-1 font-semibold text-gray-700">Заголовок</label>
-      <input v-model="form.title" :disabled="isReadonly" type="text"
+      <input v-model="form.title" type="text"
         class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring focus:ring-blue-300"
         required />
     </div>
 
     <div>
-      <label class="block mb-1 font-semibold text-gray-700">Тип Обязательства</label>
-      <input v-if="mode !== 'readonly'" v-model="form.responsibility_type" list="typesList" type="text"
-        class=" border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring focus:ring-blue-300" />
+      <label class="block mb-1 font-semibold text-gray-700">Тип обязательства</label>
+      <input v-model.trim="form.responsibility_type" list="typesList" type="text"
+        class=" border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring focus:ring-blue-300" required/>
       <datalist id="typesList">
         <option v-for="type in types" :key="type.id" :value="type.title" />
       </datalist>
@@ -101,24 +101,26 @@ onMounted(() => {
 
     <div class="flex items-center gap-2">
       <label class="block mb-1 font-semibold text-gray-700">Сроки: с</label>
-      <input v-model="form.start_date" type="date" :disabled="isReadonly"
-        class="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring focus:ring-blue-300" required/>
+      <input v-model="form.start_date" type="date"
+        class="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring focus:ring-blue-300"
+        required />
       <label class="block mb-1 font-semibold text-gray-700">по</label>
-      <input v-model="form.end_date" type="date" :disabled="isReadonly"
-        class="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring focus:ring-blue-300" required/>
+      <input v-model="form.end_date" type="date"
+        class="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring focus:ring-blue-300"
+        required />
     </div>
 
 
     <div>
       <label class="block mb-1 font-semibold text-gray-700">Описание</label>
-      <textarea v-model="form.description" :disabled="isReadonly"
+      <textarea v-model="form.description"
         class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring focus:ring-blue-300"
         rows="3" />
     </div>
 
 
     <div class="flex gap-4 font-semibold">
-      <button type="submit" :hidden="isReadonly" 
+      <button type="submit"
         class="cursor-pointer px-6 py-2 bg-teal-600 text-white font-bold rounded-lg shadow-md hover:bg-teal-700">
         Сохранить
       </button>

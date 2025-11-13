@@ -7,14 +7,15 @@ import apiAxios from '@/axios'
 import { isAxiosError } from 'axios'
 import { handleAxiosError } from '@/utils/utils'
 
-export type TaskFormMode = 'create' | 'edit' | 'readonly'
+export type TaskFormMode = 'create' | 'edit'
 const usersApi = new UsersApi(undefined, undefined, apiAxios)
 const obligationsApi = new ObligationsApi(undefined, undefined, apiAxios)
 const pvasApi = new PvasApi(undefined, undefined, apiAxios)
 
 const props = defineProps<{
   mode: TaskFormMode
-  task?: Task | null
+  task?: Task,
+  obligationId?: number
 }>()
 
 const emit = defineEmits<{
@@ -22,9 +23,9 @@ const emit = defineEmits<{
   (e: 'close'): void
 }>()
 
-const isReadonly = computed(() => props.mode === 'readonly')
 const localDeadline = ref<string>('')
 const pvaID = ref<number | undefined>()
+const includePvaObligation = ref(true)
 
 const form = ref<Task>({
   title: '',
@@ -33,7 +34,7 @@ const form = ref<Task>({
   description: '',
   status: TaskStatusEnum.NotStarted,
   is_recurring: false,
-  assigned_to: null,
+  assigned_to: undefined,
   schedule: {
     frequency_type: undefined,
     start_date: new Date().toISOString().slice(0, 10),
@@ -95,35 +96,41 @@ const handleSubmit = () => {
   emit('submit', form.value)
 }
 
-onMounted(() => {
+onMounted(async () => {
   if (props.task) {
     const deadlineDate = new Date(props.task.deadline)
     localDeadline.value = new Date(deadlineDate.getTime() - deadlineDate.getTimezoneOffset() * 60000).toISOString().slice(0, 16)
-    
+
     form.value = {
       ...props.task,
     }
   }
-  if (props.mode !== 'readonly') {
-    fetchUsers()
-    fetchPvas()
+  if (props.obligationId) {
+    form.value.obligation = props.obligationId
+    includePvaObligation.value = false
+  }
+  if (props.mode === 'edit') {
+    includePvaObligation.value = false
+  }
+  await fetchUsers()
+  if (includePvaObligation.value) {
+    await fetchPvas()
   }
 })
 </script>
 
 <template>
-  <form @submit.prevent="handleSubmit" class="max-h-100% mx-auto p-6 bg-white rounded-2xl shadow-md">
+  <form @submit.prevent="handleSubmit" class="h-full overflow-hidden flex flex-col p-6 bg-white rounded-2xl shadow-md">
+    <div class="flex-none text-xl mb-4 font-extrabold text-teal-900">{{ mode === 'create' ? 'Создание' :
+      'Редактирование'
+      }} задачи</div>
 
-    <div v-if="mode === 'readonly'" class="text-xl mb-4 font-extrabold text-teal-900">Задача #{{ task?.id }}</div>
-    <div v-else class="text-xl mb-4 font-extrabold text-teal-900">{{ mode === 'create' ? 'Создание' : 'Редактирование'
-    }} задачи</div>
-
-    <div class="space-y-6 overflow-y-auto">
-      <div v-if="mode === 'create'">
+    <div class="flex-1 space-y-6 overflow-y-auto">
+      <div v-if="includePvaObligation">
         <label class="block mb-1 font-semibold text-gray-700">Договор</label>
         <div class="flex gap-4 items-center">
           <div class="flex-1">
-            <select v-model="pvaID" :disabled="isReadonly" @change="fetchObligations(pvaID!)"
+            <select v-model="pvaID" @change="fetchObligations(pvaID!)"
               class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring focus:ring-blue-300"
               required>
               <option value="" disabled selected>Выберите договор</option>
@@ -132,19 +139,19 @@ onMounted(() => {
               </option>
             </select>
           </div>
-          <div class="flex-none">
-            <button class="cursor-pointer font-semibold text-teal-700">
+          <!-- <div class="flex-none">
+            <button type="button" class="cursor-pointer font-semibold text-teal-700">
               Добавить
             </button>
-          </div>
+          </div> -->
         </div>
       </div>
 
-      <div v-if="mode === 'create'">
+      <div v-if="includePvaObligation">
         <label class="block mb-1 font-semibold text-gray-700">Обязательство</label>
         <div class="flex gap-4 items-center">
           <div class="flex-1">
-            <select v-model="form.obligation" :disabled="isReadonly || !pvaID"
+            <select v-model="form.obligation" :disabled="!pvaID"
               class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring focus:ring-blue-300"
               required>
               <option value="" disabled selected>Выберите обязательство</option>
@@ -153,31 +160,31 @@ onMounted(() => {
               </option>
             </select>
           </div>
-          <div class="flex-none">
-            <button class="cursor-pointer font-semibold text-teal-700">
+          <!-- <div class="flex-none">
+            <button type="button" class="cursor-pointer font-semibold text-teal-700">
               Добавить
             </button>
-          </div>
+          </div> -->
         </div>
       </div>
 
       <div>
         <label class="block mb-1 font-semibold text-gray-700">Название</label>
-        <input v-model="form.title" :disabled="isReadonly" type="text"
+        <input v-model="form.title" type="text"
           class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring focus:ring-blue-300"
           required />
       </div>
 
       <div>
         <label class="block mb-1 font-semibold text-gray-700">Описание</label>
-        <textarea v-model="form.description" :disabled="isReadonly"
-          class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring focus:ring-blue-300"
+        <textarea v-model="form.description"
+          class="resize-none w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring focus:ring-blue-300"
           rows="5" />
       </div>
 
       <div>
         <label class="block mb-1 font-semibold text-gray-700">Срок выполнения</label>
-        <input v-model="localDeadline" :disabled="isReadonly" type="datetime-local"
+        <input v-model="localDeadline" type="datetime-local"
           class="w-fit border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring focus:ring-blue-300"
           required />
       </div>
@@ -185,7 +192,7 @@ onMounted(() => {
       <div class="flex justify-stretch items-center gap-2">
         <div class="flex items-center gap-2">
           <label for="recurring" class="text-gray-700">Повторять</label>
-          <input v-model="form.is_recurring" :disabled="isReadonly" type="checkbox" id="recurring"
+          <input v-model="form.is_recurring" type="checkbox" id="recurring"
             class="rounded border-gray-300 focus:ring-blue-300" />
         </div>
 
@@ -209,18 +216,13 @@ onMounted(() => {
         </div>
       </div>
 
-      <div v-if="mode === 'readonly'">
-        <label class="block mb-1 font-semibold text-gray-700">Создана</label>
-        <label class="block mb-1"> {{ form.created_by }}</label>
-      </div>
-
       <div>
         <label class="block mb-1 font-semibold text-gray-700">Назначена</label>
-        <select v-model="form.assigned_to" :disabled="isReadonly"
+        <select v-model="form.assigned_to"
           class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring focus:ring-blue-300">
           <option value="">Выберите исполнителя</option>
           <option v-for="user in users" :key="user.id" :value="user.id">
-            {{ user.last_name }} {{ user.first_name }}
+            {{ user.last_name }} {{ user.first_name }} ({{ user.username }})
           </option>
         </select>
       </div>
@@ -228,8 +230,8 @@ onMounted(() => {
     </div>
 
 
-    <div class="flex gap-4 font-semibold my-6">
-      <button type="submit" :hidden="isReadonly"
+    <div class="flex-none flex gap-4 font-semibold my-6">
+      <button type="submit"
         class="cursor-pointer px-6 py-2 bg-teal-600 text-white font-bold rounded-lg shadow-md hover:bg-teal-700">
         Сохранить
       </button>
@@ -237,9 +239,3 @@ onMounted(() => {
     </div>
   </form>
 </template>
-
-<style scoped>
-textarea {
-  resize: none;
-}
-</style>
