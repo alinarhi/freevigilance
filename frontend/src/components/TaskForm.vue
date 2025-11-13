@@ -83,7 +83,6 @@ const fetchPvas = async () => {
 
 watch(localDeadline, (newValue) => {
   if (newValue) {
-    console.log(newValue)
     form.value.deadline = new Date(newValue).toISOString()
   }
 })
@@ -91,8 +90,11 @@ watch(localDeadline, (newValue) => {
 const handleSubmit = () => {
   if (!form.value.is_recurring) {
     form.value.schedule = undefined
+  } else if (new Date(form.value.schedule!.end_date) <= new Date(form.value.deadline)) {
+    alert('Дата окончания повторения не может быть раньше срока выполнения')
+    return
   }
-  console.log(form.value)
+  console.log('Task Form Submit', form.value)
   emit('submit', form.value)
 }
 
@@ -103,6 +105,13 @@ onMounted(async () => {
 
     form.value = {
       ...props.task,
+    }
+    if (!props.task.schedule) {
+      form.value.schedule = {
+        frequency_type: undefined,
+        start_date: new Date().toISOString().slice(0, 10),
+        end_date: ''
+      }
     }
   }
   if (props.obligationId) {
@@ -123,7 +132,7 @@ onMounted(async () => {
   <form @submit.prevent="handleSubmit" class="h-full overflow-hidden flex flex-col p-6 bg-white rounded-2xl shadow-md">
     <div class="flex-none text-xl mb-4 font-extrabold text-teal-900">{{ mode === 'create' ? 'Создание' :
       'Редактирование'
-      }} задачи</div>
+    }} задачи</div>
 
     <div class="flex-1 space-y-6 overflow-y-auto">
       <div v-if="includePvaObligation">
