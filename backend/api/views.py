@@ -168,6 +168,9 @@ class ObligationTaskListView(generics.ListAPIView):
 class ResponsibilityTypeViewSet(viewsets.ModelViewSet):
     queryset = ResponsibilityType.objects.all()
     serializer_class = ResponsibilityTypeSerializer
+    
+    def get_queryset(self):
+        return super().get_queryset().order_by('title')
 
 class MedicinalProductViewSet(viewsets.ModelViewSet):
     queryset = MedicinalProduct.objects.all()
