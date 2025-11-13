@@ -7,6 +7,7 @@ import PVAObligationsView from '@/views/PVAObligationsView.vue';
 import AuditlogView from '@/views/AuditlogView.vue';
 import TaskView from '@/views/TaskView.vue';
 import ObligationTasksView from '@/views/ObligationTasksView.vue';
+import NotFoundView from '@/views/NotFoundView.vue';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -80,6 +81,11 @@ const router = createRouter({
       path: '/logout',
       redirect: '/login'
     },
+    { 
+      path: '/:pathMatch(.*)*',
+      name: 'notfound', 
+      component: NotFoundView },
+
   ],
 })
 
