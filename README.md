@@ -1,6 +1,6 @@
 # Freevigilance
-Приложение для управления соглашениями по фармакобезопасности.
-
+Приложение для управления соглашениями по фармакобезопасности: таск-менеджер для фармацевтической индустрии.
+<img src="demo/freevigilance-demo.gif" alt="screen 1" height=600>
 ## To run locally
 *prerequisites: python 3.10, npm*
 ### 1. clone this repo
