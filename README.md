@@ -1,6 +1,10 @@
 # Freevigilance
-Приложение для управления соглашениями по фармакобезопасности: таск-менеджер для фармацевтической индустрии.
+***Task manager for the pharmaceutical industry*** 
+
+Manage `PVAs`, `Obligations` and `Tasks` and keep track of all changes
+
 <img src="demo/freevigilance-demo.gif" alt="screen 1" height=600>
+
 ## To run locally
 *prerequisites: python 3.10, npm*
 ### 1. clone this repo
@@ -16,4 +20,4 @@ In terminal:
   - $ cd frontend
   - $ echo VITE_API_URL='http://127.0.0.1:8000/' >> .env
   - $ npm install
-  - $ npm run dev
+  - $ npm run preview
